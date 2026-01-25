@@ -9,19 +9,20 @@ include(FetchContent)
 FetchContent_Declare(
     raylib
     GIT_REPOSITORY https://github.com/raysan5/raylib.git
-    GIT_TAG 4.5.0
+    GIT_TAG master
 )
 FetchContent_MakeAvailable(raylib)
 
 FetchContent_Declare(
     raylib_cpp
     GIT_REPOSITORY https://github.com/RobLoach/raylib-cpp.git
-    GIT_TAG v4.5.0
+    GIT_TAG master
 )
 FetchContent_MakeAvailable(raylib_cpp)
 
 add_executable(${PROJECT_NAME}
     src/main.cpp
+    src/engine/logging/Logger.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

@@ -9,6 +9,9 @@ build/
 *.so
 *.dylib
 
+# Logs
+*.log
+
 # CMake
 CMakeCache.txt
 CMakeFiles/
@@ -35,3 +38,5 @@ desktop.ini
 *.tmp
 *.swp
 *~
+
+*.md

@@ -1,12 +1,13 @@
 #include "raylib-cpp.hpp"
 #include "engine/logging/Logger.h"
+#include "engine/core/Time.h"
 
 constexpr int WINDOW_WIDTH = 1280;
 constexpr int WINDOW_HEIGHT = 720;
 constexpr int TARGET_FPS = 60;
 
 int main() {
-    Engine::Logger::Get().SetMinLevel(Engine::LogLevel::DEBUG);
+    Engine::Logger::Get().SetMinLevel(Engine::LogLevel::INFO);
     
     LOG_INFO("=== Warcraft Engine Starting ===");
     LOG_INFO("Window size: %dx%d", WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -16,15 +17,20 @@ int main() {
     window.SetTargetFPS(TARGET_FPS);
     
     LOG_INFO("Window created successfully");
+    LOG_INFO("Time system initialized");
     
     raylib::Color backgroundColor(30, 30, 30, 255);
-    int frameCount = 0;
+    float testX = 100.0f;
+    constexpr float moveSpeed = 200.0f;
 
     while (!window.ShouldClose()) {
-        frameCount++;
+        Engine::Time::Update();
         
-        if (frameCount % 60 == 0) {
-            LOG_DEBUG("Frame: %d, FPS: %d", frameCount, GetFPS());
+        if (IsKeyDown(KEY_RIGHT)) {
+            testX += moveSpeed * Engine::Time::GetDeltaTime();
+        }
+        if (IsKeyDown(KEY_LEFT)) {
+            testX -= moveSpeed * Engine::Time::GetDeltaTime();
         }
         
         BeginDrawing();
@@ -32,13 +38,16 @@ int main() {
         
         DrawText("Warcraft Engine v0.1", 20, 20, 40, RAYWHITE);
         DrawText("Press ESC to exit", 20, 80, 20, LIGHTGRAY);
+        DrawText("Arrow keys to test DeltaTime", 20, 120, 20, LIGHTGRAY);
         DrawFPS(WINDOW_WIDTH - 100, 20);
+        
+        DrawCircle(static_cast<int>(testX), 300, 20, RED);
         
         EndDrawing();
     }
     
     LOG_INFO("Shutting down engine");
-    LOG_INFO("Total frames rendered: %d", frameCount);
+    LOG_INFO("Total runtime: %.2f seconds", Engine::Time::GetTime());
 
     return 0;
 }

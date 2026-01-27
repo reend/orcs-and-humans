@@ -20,28 +20,16 @@ int main() {
     LOG_INFO("Time system initialized");
     
     raylib::Color backgroundColor(30, 30, 30, 255);
-    float testX = 100.0f;
-    constexpr float moveSpeed = 200.0f;
 
     while (!window.ShouldClose()) {
         Engine::Time::Update();
-        
-        if (IsKeyDown(KEY_RIGHT)) {
-            testX += moveSpeed * Engine::Time::GetDeltaTime();
-        }
-        if (IsKeyDown(KEY_LEFT)) {
-            testX -= moveSpeed * Engine::Time::GetDeltaTime();
-        }
         
         BeginDrawing();
         ClearBackground(backgroundColor);
         
         DrawText("Warcraft Engine v0.1", 20, 20, 40, RAYWHITE);
         DrawText("Press ESC to exit", 20, 80, 20, LIGHTGRAY);
-        DrawText("Arrow keys to test DeltaTime", 20, 120, 20, LIGHTGRAY);
         DrawFPS(WINDOW_WIDTH - 100, 20);
-        
-        DrawCircle(static_cast<int>(testX), 300, 20, RED);
         
         EndDrawing();
     }

@@ -2,22 +2,22 @@
 setlocal
 
 echo ======================================
-echo   Warcraft Engine - Clean Build
+echo   Warcraft Engine - Quick Build
 echo ======================================
 echo.
 
-REM Clean old build
-echo [1/4] Cleaning old build...
-if exist build (
-    rmdir /s /q build
-    echo       Done
-) else (
-    echo       No build folder found
-)
-echo.
+REM Clean old build (DISABLED - use for full clean)
+REM echo [1/4] Cleaning old build...
+REM if exist build (
+REM     rmdir /s /q build
+REM     echo       Done
+REM ) else (
+REM     echo       No build folder found
+REM )
+REM echo.
 
 REM Configure
-echo [2/4] Configuring with CMake...
+echo [1/3] Configuring with CMake...
 cmake -B build
 if %ERRORLEVEL% NEQ 0 (
     echo.
@@ -29,7 +29,7 @@ echo       Done
 echo.
 
 REM Build
-echo [3/4] Building project...
+echo [2/3] Building project...
 cmake --build build
 if %ERRORLEVEL% NEQ 0 (
     echo.
@@ -41,7 +41,7 @@ echo       Done
 echo.
 
 REM Success
-echo [4/4] Build completed successfully!
+echo [3/3] Build completed successfully!
 echo.
 echo ======================================
 echo   Executable: build\Debug\warcraft.exe

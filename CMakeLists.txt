@@ -27,6 +27,7 @@ add_executable(${PROJECT_NAME}
     src/engine/input/Input.cpp
     src/engine/core/Layer.cpp
     src/engine/core/LayerStack.cpp
+    src/engine/core/Application.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

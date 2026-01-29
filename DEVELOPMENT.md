@@ -22,7 +22,8 @@ This file contains project context for AI assistants working on this codebase.
 **Commit #3:** ✅ Time system (DeltaTime, TimeScale, FPS tracking)  
 **Commit #4:** ✅ Event system (EventDispatcher, Window/Key/Mouse events)  
 **Commit #5:** ✅ Input Manager (polling API, KeyCode/MouseButton enums, platform abstraction)  
-**Commit #6:** ✅ Layer System (Layer base class, LayerStack with overlays)
+**Commit #6:** ✅ Layer System (Layer base class, LayerStack with overlays)  
+**Commit #7:** ✅ Application Class (game loop, window management, layer orchestration)
 
 ## Architecture Decisions
 
@@ -104,6 +105,17 @@ src/
 - Overlays always rendered on top (UI, debug info)
 - Event propagation stops if `event.handled = true`
 
+### Application Specifics
+- Base class for game applications (engine/core/)
+- Singleton pattern with static `Get()` access
+- Owns window (raylib::Window*) and LayerStack
+- Main game loop in `Run()`: Time::Update(), layer updates, rendering
+- `PushLayer()/PushOverlay()` - convenience wrappers for LayerStack
+- Game inherits from Application (e.g., `WarcraftGame : public Application`)
+- Constructor creates window with width, height, title, target FPS
+- Destructor cleans up window and layers
+- `GetWindow()` provides access to window for layers
+
 ## Build System
 
 **Versions:**
@@ -147,8 +159,8 @@ type: brief description
 3. ✅ Time system
 4. ✅ Event system
 5. ✅ Input manager
-6. Layer system
-7. Application class
+6. ✅ Layer system
+7. ✅ Application class
 
 ### Phase 2: Graphics (Commits 8-12)
 8. Sprite system

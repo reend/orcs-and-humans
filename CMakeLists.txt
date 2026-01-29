@@ -25,9 +25,12 @@ add_executable(${PROJECT_NAME}
     src/engine/logging/Logger.cpp
     src/engine/core/Time.cpp
     src/engine/input/Input.cpp
+    src/engine/core/Layer.cpp
+    src/engine/core/LayerStack.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_SOURCE_DIR}/src
     ${raylib_SOURCE_DIR}/src
     ${raylib_cpp_SOURCE_DIR}/include
 )

@@ -21,7 +21,8 @@ This file contains project context for AI assistants working on this codebase.
 **Commit #2:** ✅ Logger system (thread-safe, colored console, printf-style)  
 **Commit #3:** ✅ Time system (DeltaTime, TimeScale, FPS tracking)  
 **Commit #4:** ✅ Event system (EventDispatcher, Window/Key/Mouse events)  
-**Commit #5:** ✅ Input Manager (polling API, KeyCode/MouseButton enums, platform abstraction)
+**Commit #5:** ✅ Input Manager (polling API, KeyCode/MouseButton enums, platform abstraction)  
+**Commit #6:** ✅ Layer System (Layer base class, LayerStack with overlays)
 
 ## Architecture Decisions
 
@@ -91,6 +92,18 @@ src/
 - Used for gameplay (movement, camera) - events for UI/single actions
 - `::` prefix on raylib calls to avoid name conflicts
 
+### Layer Specifics
+- Layer base class with virtual methods: `OnAttach()`, `OnDetach()`, `OnUpdate()`, `OnEvent()`
+- LayerStack manages layers and overlays in order
+- Layers pushed first (bottom), overlays pushed last (top)
+- Update order: bottom to top (layers iterate forward)
+- Event order: top to bottom (overlays handle events first, reverse iterate)
+- `layerInsertIndex` tracks boundary between layers and overlays
+- LayerStack owns layer pointers (deletes on destruction)
+- Each layer has name for debugging
+- Overlays always rendered on top (UI, debug info)
+- Event propagation stops if `event.handled = true`
+
 ## Build System
 
 **Versions:**
@@ -137,39 +150,39 @@ type: brief description
 6. Layer system
 7. Application class
 
-### Phase 2: Graphics (Commits 7-11)
-7. Sprite system
-8. Animation system
-9. Camera system
-10. Map/tilemap system
-11. Sprite renderer
+### Phase 2: Graphics (Commits 8-12)
+8. Sprite system
+9. Animation system
+10. Camera system
+11. Map/tilemap system
+12. Sprite renderer
 
-### Phase 3: Game Logic (Commits 12-16)
-12. A* pathfinding
-13. Unit system
-14. Selection system
-15. Movement commands
-16. Multiple units
+### Phase 3: Game Logic (Commits 13-17)
+13. A* pathfinding
+14. Unit system
+15. Selection system
+16. Movement commands
+17. Multiple units
 
-### Phase 4: UI (Commits 17-19)
-17. UI framework
-18. HUD (resources, portrait)
-19. Minimap
+### Phase 4: UI (Commits 18-20)
+18. UI framework
+19. HUD (resources, portrait)
+20. Minimap
 
-### Phase 5: Gameplay (Commits 20-24)
-20. Resource system (gold, wood)
-21. Building system
-22. Unit production
-23. Combat system
-24. Unit AI (FSM)
+### Phase 5: Gameplay (Commits 21-25)
+21. Resource system (gold, wood)
+22. Building system
+23. Unit production
+24. Combat system
+25. Unit AI (FSM)
 
-### Phase 6: Polish (Commits 25-30)
-25. Fog of war
-26. Audio system
-27. Enemy AI
-28. Optimization (quadtree)
-29. Particle effects
-30. Game states (menu, pause)
+### Phase 6: Polish (Commits 26-31)
+26. Fog of war
+27. Audio system
+28. Enemy AI
+29. Optimization (quadtree)
+30. Particle effects
+31. Game states (menu, pause)
 
 ## Assets
 

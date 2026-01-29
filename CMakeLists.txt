@@ -25,6 +25,8 @@ add_executable(${PROJECT_NAME}
     src/engine/logging/Logger.cpp
     src/engine/core/Time.cpp
     src/engine/input/Input.cpp
+    src/engine/core/Layer.cpp
+    src/engine/core/LayerStack.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

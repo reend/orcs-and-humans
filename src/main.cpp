@@ -1,6 +1,10 @@
 #include "raylib-cpp.hpp"
 #include "engine/logging/Logger.h"
 #include "engine/core/Time.h"
+#include "engine/events/Event.h"
+#include "engine/events/WindowEvents.h"
+#include "engine/events/KeyEvents.h"
+#include "engine/events/MouseEvents.h"
 
 constexpr int WINDOW_WIDTH = 1280;
 constexpr int WINDOW_HEIGHT = 720;
@@ -18,6 +22,7 @@ int main() {
     
     LOG_INFO("Window created successfully");
     LOG_INFO("Time system initialized");
+    LOG_INFO("Event system initialized");
     
     raylib::Color backgroundColor(30, 30, 30, 255);
 

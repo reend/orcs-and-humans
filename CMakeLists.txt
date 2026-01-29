@@ -30,6 +30,7 @@ add_executable(${PROJECT_NAME}
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_SOURCE_DIR}/src
     ${raylib_SOURCE_DIR}/src
     ${raylib_cpp_SOURCE_DIR}/include
 )

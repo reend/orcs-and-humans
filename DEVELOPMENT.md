@@ -21,7 +21,7 @@ This file contains project context for AI assistants working on this codebase.
 **Commit #2:** ✅ Logger system (thread-safe, colored console, printf-style)  
 **Commit #3:** ✅ Time system (DeltaTime, TimeScale, FPS tracking)  
 **Commit #4:** ✅ Event system (EventDispatcher, Window/Key/Mouse events)  
-**Commit #5:** 🚧 IN PROGRESS - Input Manager
+**Commit #5:** ✅ Input Manager (polling API, KeyCode/MouseButton enums, platform abstraction)
 
 ## Architecture Decisions
 
@@ -80,6 +80,17 @@ src/
 - MouseEvents: Moved, Scrolled, ButtonPressed, ButtonReleased
 - `handled` flag stops event propagation
 
+### Input Specifics
+- Polling-based API (not event-driven)
+- Custom KeyCode enum (A-Z, 0-9, arrows, modifiers)
+- Custom MouseButton enum (Left, Right, Middle)
+- Custom Vector2 struct (independent from raylib)
+- Static methods only (no singleton needed)
+- Three states per key: Pressed (single frame), Down (held), Released (single frame)
+- Platform abstraction: `KeyCodeToRaylib()`, `MouseButtonToRaylib()` mapping
+- Used for gameplay (movement, camera) - events for UI/single actions
+- `::` prefix on raylib calls to avoid name conflicts
+
 ## Build System
 
 **Versions:**
@@ -117,13 +128,14 @@ type: brief description
 
 ## Development Plan (30 commits)
 
-### Phase 1: Core Infrastructure (Commits 1-6)
+### Phase 1: Core Infrastructure (Commits 1-7)
 1. ✅ Project setup
 2. ✅ Logger system
 3. ✅ Time system
 4. ✅ Event system
-5. Input manager
-6. Engine core + Resource manager
+5. ✅ Input manager
+6. Layer system
+7. Application class
 
 ### Phase 2: Graphics (Commits 7-11)
 7. Sprite system

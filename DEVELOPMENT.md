@@ -23,7 +23,8 @@ This file contains project context for AI assistants working on this codebase.
 **Commit #4:** ✅ Event system (EventDispatcher, Window/Key/Mouse events)  
 **Commit #5:** ✅ Input Manager (polling API, KeyCode/MouseButton enums, platform abstraction)  
 **Commit #6:** ✅ Layer System (Layer base class, LayerStack with overlays)  
-**Commit #7:** ✅ Application Class (game loop, window management, layer orchestration)
+**Commit #7:** ✅ Application Class (game loop, window management, layer orchestration)  
+**Commit #8:** ✅ Sprite System (texture loading, source rect, draw with rotation/scale)
 
 ## Architecture Decisions
 
@@ -116,6 +117,17 @@ src/
 - Destructor cleans up window and layers
 - `GetWindow()` provides access to window for layers
 
+### Sprite Specifics
+- Wraps raylib Texture2D with flexible rendering
+- `sourceRect` - allows sprite sheets (any rect from texture)
+- Multiple constructors: empty, full texture, or custom rect
+- `Draw()` with position, rotation, scale parameters
+- `Draw()` with origin point for rotation pivot
+- `SetTint()` for color modulation
+- `GetSize()` returns sprite dimensions
+- Auto-unload in destructor (RAII)
+- Supports any texture size (units, buildings, terrain)
+
 ## Build System
 
 **Versions:**
@@ -163,7 +175,7 @@ type: brief description
 7. ✅ Application class
 
 ### Phase 2: Graphics (Commits 8-12)
-8. Sprite system
+8. ✅ Sprite system
 9. Animation system
 10. Camera system
 11. Map/tilemap system

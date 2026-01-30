@@ -31,12 +31,12 @@ void Application::Run() {
     while (running && !window->ShouldClose()) {
         Time::Update();
         
+        BeginDrawing();
+        ClearBackground(raylib::Color(30, 30, 30, 255));
+        
         for (Layer* layer : layerStack) {
             layer->OnUpdate();
         }
-        
-        BeginDrawing();
-        ClearBackground(raylib::Color(30, 30, 30, 255));
         
         DrawFPS(window->GetWidth() - 100, 20);
         

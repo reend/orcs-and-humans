@@ -24,7 +24,8 @@ This file contains project context for AI assistants working on this codebase.
 **Commit #5:** ✅ Input Manager (polling API, KeyCode/MouseButton enums, platform abstraction)  
 **Commit #6:** ✅ Layer System (Layer base class, LayerStack with overlays)  
 **Commit #7:** ✅ Application Class (game loop, window management, layer orchestration)  
-**Commit #8:** ✅ Sprite System (texture loading, source rect, draw with rotation/scale)
+**Commit #8:** ✅ Sprite System (texture loading, source rect, draw with rotation/scale)  
+**Commit #9:** ✅ Animation System (frame-based animation, AnimationController, FPS control)
 
 ## Architecture Decisions
 
@@ -128,6 +129,18 @@ src/
 - Auto-unload in destructor (RAII)
 - Supports any texture size (units, buildings, terrain)
 
+### Animation Specifics
+- `Animation` class - manages frame sequence, FPS, loop mode
+- Frame storage as `std::vector<Rectangle>` for sprite sheet coords
+- `Update(deltaTime)` - advances animation based on time
+- `Play/Stop/Reset` controls
+- Loop or once mode (for death animations)
+- `GetCurrentFrame()` returns current Rectangle for Sprite
+- `AnimationController` - manages multiple named animations
+- `Play("idle")` switches animations, auto-resets previous
+- Controller updates Sprite's sourceRect automatically
+- Used for: unit walk cycles, attack animations, idle breathing
+
 ## Build System
 
 **Versions:**
@@ -176,7 +189,7 @@ type: brief description
 
 ### Phase 2: Graphics (Commits 8-12)
 8. ✅ Sprite system
-9. Animation system
+9. ✅ Animation system
 10. Camera system
 11. Map/tilemap system
 12. Sprite renderer

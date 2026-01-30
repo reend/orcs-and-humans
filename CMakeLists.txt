@@ -29,6 +29,8 @@ add_executable(${PROJECT_NAME}
     src/engine/core/LayerStack.cpp
     src/engine/core/Application.cpp
     src/engine/graphics/Sprite.cpp
+    src/engine/graphics/Animation.cpp
+    src/engine/graphics/AnimationController.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

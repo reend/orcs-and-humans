@@ -25,7 +25,8 @@ This file contains project context for AI assistants working on this codebase.
 **Commit #6:** ✅ Layer System (Layer base class, LayerStack with overlays)  
 **Commit #7:** ✅ Application Class (game loop, window management, layer orchestration)  
 **Commit #8:** ✅ Sprite System (texture loading, source rect, draw with rotation/scale)  
-**Commit #9:** ✅ Animation System (frame-based animation, AnimationController, FPS control)
+**Commit #9:** ✅ Animation System (frame-based animation, AnimationController, FPS control)  
+**Commit #10:** ✅ Camera System (2D camera, zoom, bounds, coordinate transforms)
 
 ## Architecture Decisions
 
@@ -141,6 +142,16 @@ src/
 - Controller updates Sprite's sourceRect automatically
 - Used for: unit walk cycles, attack animations, idle breathing
 
+### Camera Specifics
+- `Camera2D` class wraps raylib Camera2D for 2D world navigation
+- Position and zoom control (clamped 0.1x - 5.0x)
+- `Move()` for relative movement, `SetPosition()` for absolute
+- `SetBounds()` / `EnableBounds()` - prevent camera from leaving map area
+- `Begin()` / `End()` - wrap rendering in camera space
+- `ScreenToWorld()` / `WorldToScreen()` - coordinate transformations for mouse clicks
+- Bounds clamping in `ClampToBounds()` prevents out-of-map camera
+- Used for: map scrolling, following units, minimap clicks
+
 ## Build System
 
 **Versions:**
@@ -190,7 +201,7 @@ type: brief description
 ### Phase 2: Graphics (Commits 8-12)
 8. ✅ Sprite system
 9. ✅ Animation system
-10. Camera system
+10. ✅ Camera system
 11. Map/tilemap system
 12. Sprite renderer
 

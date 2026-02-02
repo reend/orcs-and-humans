@@ -5,6 +5,7 @@
 #include "engine/input/Input.h"
 #include "engine/graphics/Camera2D.h"
 #include "engine/graphics/Tilemap.h"
+#include "engine/graphics/SpriteRenderer.h"
 
 constexpr int WINDOW_WIDTH = 1280;
 constexpr int WINDOW_HEIGHT = 720;
@@ -16,6 +17,8 @@ public:
     
     void OnAttach() override {
         LOG_INFO("GameLayer attached");
+        
+        renderer = new Engine::SpriteRenderer();
         
         camera = new Engine::Camera2D(0, 0);
         camera->SetZoom(1.5f);
@@ -37,6 +40,7 @@ public:
         delete forestLayer;
         delete groundLayer;
         delete camera;
+        delete renderer;
     }
     
     void OnUpdate() override {
@@ -47,19 +51,27 @@ public:
         if (Engine::Input::IsKeyDown(Engine::KeyCode::A)) camera->Move({-cameraSpeed, 0});
         if (Engine::Input::IsKeyDown(Engine::KeyCode::D)) camera->Move({cameraSpeed, 0});
         
+        camera->Begin();
+        renderer->Begin();
+        groundLayer->Draw(camera, renderer);
+        forestLayer->Draw(camera, renderer);
+        renderer->End();
+        camera->End();
+        
         DrawText("Tilemap Demo", 20, 20, 30, RAYWHITE);
         DrawText("WASD - scroll map", 20, 60, 20, LIGHTGRAY);
         
-        camera->Begin();
-        groundLayer->Draw(camera);
-        forestLayer->Draw(camera);
-        camera->End();
+        char statsText[128];
+        sprintf(statsText, "Batches: %d | Draw Calls: %d", 
+                renderer->GetBatchCount(), renderer->GetDrawCallCount());
+        DrawText(statsText, 20, 100, 20, LIME);
     }
     
 private:
     Engine::Camera2D* camera = nullptr;
     Engine::Tilemap* groundLayer = nullptr;
     Engine::Tilemap* forestLayer = nullptr;
+    Engine::SpriteRenderer* renderer = nullptr;
 };
 
 class WarcraftGame : public Engine::Application {

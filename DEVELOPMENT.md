@@ -27,7 +27,8 @@ This file contains project context for AI assistants working on this codebase.
 **Commit #8:** ✅ Sprite System (texture loading, source rect, draw with rotation/scale)  
 **Commit #9:** ✅ Animation System (frame-based animation, AnimationController, FPS control)  
 **Commit #10:** ✅ Camera System (2D camera, zoom, bounds, coordinate transforms)  
-**Commit #11:** ✅ Tilemap System (2D tile grid, tileset loading, passable tiles, culling)
+**Commit #11:** ✅ Tilemap System (2D tile grid, tileset loading, passable tiles, culling)  
+**Commit #12:** ✅ Sprite Renderer (batching, texture sorting, draw call optimization)
 
 ## Architecture Decisions
 
@@ -172,6 +173,16 @@ src/
 - Tile IDs match Tiled Map Editor directly (no conversion needed)
 - Assets organized: `assets/maps/winter/` (tileset.png, ground.csv, forest.csv)
 
+### SpriteRenderer Specifics
+- Batching system for optimizing sprite rendering
+- `Begin()` starts batch collection, `End()` flushes to GPU
+- `DrawSprite()` adds sprites to batch buffer (not drawn immediately)
+- Sorts sprites by texture ID to minimize texture switches (draw call optimization)
+- Reduces GPU state changes from hundreds to just a few
+- Provides statistics: batch count (total sprites) and draw call count (GPU calls)
+- Used by Tilemap for efficient tile rendering
+- Performance benefit: ~800 tiles rendered with minimal draw calls instead of 800 separate GPU calls
+
 ## Build System
 
 **Versions:**
@@ -223,7 +234,7 @@ type: brief description
 9. ✅ Animation system
 10. ✅ Camera system
 11. ✅ Tilemap system
-12. Sprite renderer
+12. ✅ Sprite renderer
 
 ### Phase 3: Game Logic (Commits 13-17)
 13. A* pathfinding

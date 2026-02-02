@@ -147,7 +147,7 @@ raylib::Vector2 Tilemap::WorldToTile(raylib::Vector2 worldPos) const {
     };
 }
 
-void Tilemap::Draw(Camera2D* camera) {
+void Tilemap::Draw(Camera2D* camera, SpriteRenderer* renderer) {
     if (!tilesetSprite || !tilesetSprite->IsLoaded()) return;
     
     raylib::Vector2 camPos = camera->GetPosition();
@@ -170,15 +170,20 @@ void Tilemap::Draw(Camera2D* camera) {
             int srcX = (tileId % tilesPerRow) * (tileSize + spacing);
             int srcY = (tileId / tilesPerRow) * (tileSize + spacing);
             
-            tilesetSprite->SetSourceRect(raylib::Rectangle{
+            raylib::Rectangle sourceRect = {
                 static_cast<float>(srcX),
                 static_cast<float>(srcY),
                 static_cast<float>(tileSize),
                 static_cast<float>(tileSize)
-            });
+            };
             
             raylib::Vector2 worldPos = TileToWorld(x, y);
-            tilesetSprite->Draw(worldPos);
+            
+            renderer->DrawSprite(
+                tilesetSprite->GetTexture(),
+                sourceRect,
+                worldPos
+            );
         }
     }
 }

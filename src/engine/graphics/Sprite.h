@@ -26,6 +26,8 @@ public:
     raylib::Vector2 GetSize() const;
     bool IsLoaded() const { return texture.id > 0; }
     
+    raylib::Texture2D* GetTexture() { return &texture; }
+    
 private:
     raylib::Texture2D texture;
     raylib::Rectangle sourceRect;

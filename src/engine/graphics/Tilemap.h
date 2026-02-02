@@ -1,6 +1,7 @@
 #pragma once
 #include "Sprite.h"
 #include "Camera2D.h"
+#include "SpriteRenderer.h"
 #include <vector>
 
 namespace Engine {
@@ -27,7 +28,7 @@ public:
     raylib::Vector2 TileToWorld(int tileX, int tileY) const;
     raylib::Vector2 WorldToTile(raylib::Vector2 worldPos) const;
     
-    void Draw(Camera2D* camera);
+    void Draw(Camera2D* camera, SpriteRenderer* renderer);
     
     int GetMapWidth() const { return mapWidth; }
     int GetMapHeight() const { return mapHeight; }

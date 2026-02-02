@@ -26,7 +26,8 @@ This file contains project context for AI assistants working on this codebase.
 **Commit #7:** ✅ Application Class (game loop, window management, layer orchestration)  
 **Commit #8:** ✅ Sprite System (texture loading, source rect, draw with rotation/scale)  
 **Commit #9:** ✅ Animation System (frame-based animation, AnimationController, FPS control)  
-**Commit #10:** ✅ Camera System (2D camera, zoom, bounds, coordinate transforms)
+**Commit #10:** ✅ Camera System (2D camera, zoom, bounds, coordinate transforms)  
+**Commit #11:** ✅ Tilemap System (2D tile grid, tileset loading, passable tiles, culling)
 
 ## Architecture Decisions
 
@@ -152,6 +153,25 @@ src/
 - Bounds clamping in `ClampToBounds()` prevents out-of-map camera
 - Used for: map scrolling, following units, minimap clicks
 
+### Tilemap Specifics
+- `Tilemap` class manages 2D grid of tiles (terrain)
+- Fixed tile size (typically 32x32 for Warcraft 2)
+- `LoadTileset()` - loads tileset PNG, supports spacing between tiles
+- `LoadFromCSV()` - loads map data exported from Tiled Map Editor
+- Supports multi-layer rendering (ground, forest, buildings, etc.)
+- 2D vector storage `std::vector<std::vector<Tile>>`
+- Each tile has `id` (which sprite) and `passable` flag (for pathfinding)
+- `SetTile/GetTile` - modify/query individual tiles
+- `TileToWorld/WorldToTile` - coordinate conversions
+- `Draw()` with frustum culling - only renders visible tiles (performance)
+- Frustum culling adapts to screen size using `GetScreenWidth()/GetScreenHeight()`
+- `IsPassable()` - used by A* pathfinding later
+- CSV format: comma-separated tile IDs, one row per line (-1 = empty tile)
+- Auto-resizes tilemap if CSV dimensions differ from constructor
+- Spacing parameter handles pixel gaps between tiles in tileset (e.g., 1px margin)
+- Tile IDs match Tiled Map Editor directly (no conversion needed)
+- Assets organized: `assets/maps/winter/` (tileset.png, ground.csv, forest.csv)
+
 ## Build System
 
 **Versions:**
@@ -202,7 +222,7 @@ type: brief description
 8. ✅ Sprite system
 9. ✅ Animation system
 10. ✅ Camera system
-11. Map/tilemap system
+11. ✅ Tilemap system
 12. Sprite renderer
 
 ### Phase 3: Game Logic (Commits 13-17)

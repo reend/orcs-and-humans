@@ -32,6 +32,7 @@ add_executable(${PROJECT_NAME}
     src/engine/graphics/Animation.cpp
     src/engine/graphics/AnimationController.cpp
     src/engine/graphics/Camera2D.cpp
+    src/engine/graphics/Tilemap.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

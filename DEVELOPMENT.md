@@ -27,15 +27,15 @@ This file contains project context for AI assistants working on this codebase.
 **Commit #8:** ✅ Sprite System (texture loading, source rect, draw with rotation/scale)  
 **Commit #9:** ✅ Animation System (frame-based animation, AnimationController, FPS control)  
 **Commit #10:** ✅ Camera System (2D camera, zoom, bounds, coordinate transforms)  
-**Commit #11:** ✅ Tilemap System (2D tile grid, tileset loading, passable tiles, culling)  
-**Commit #12:** ✅ Sprite Renderer (batching, texture sorting, draw call optimization)  
+**Commit #11:** ✅ Tilemap System (2D tile grid, tileset loading, passable tiles, culling)
+**Commit #12:** ✅ Sprite Renderer (batching, texture sorting, draw call optimization)
 **Commit #13:** ✅ A* Pathfinding (path search, heuristic, obstacle avoidance)
 
 ## Planned Commits
 
-**Commit #14:** Resource Manager (texture/sound caching, reference counting, memory optimization)  
-**Commit #15:** Unit System (base Unit class, movement along path, sprite rendering)  
-**Commit #16:** Selection System (mouse drag selection, multi-unit selection, visual feedback)  
+**Commit #14:** ⏭️ Resource Manager (SKIPPED - will implement later with more context)
+**Commit #15:** Unit System (base Unit class, movement along path, sprite rendering)
+**Commit #16:** Selection System (mouse drag selection, multi-unit selection, visual feedback)
 **Commit #17:** Command System (right-click movement, unit queueing, pathfinding integration)
 
 ## Architecture Decisions
@@ -280,10 +280,10 @@ type: brief description
 
 ### Phase 3: Game Logic (Commits 13-17)
 13. ✅ A* pathfinding
-14. Unit system
-15. Selection system
-16. Movement commands
-17. Multiple units
+14. ⏭️ Resource Manager (skipped)
+15. Unit system
+16. Selection system
+17. Movement commands
 
 ### Phase 4: UI (Commits 18-20)
 18. UI framework

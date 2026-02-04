@@ -35,6 +35,7 @@ add_executable(${PROJECT_NAME}
     src/engine/graphics/Tilemap.cpp
     src/engine/graphics/SpriteRenderer.cpp
     src/engine/pathfinding/Pathfinder.cpp
+    src/game/entities/Unit.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

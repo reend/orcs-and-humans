@@ -17,24 +17,23 @@ This file contains project context for AI assistants working on this codebase.
 
 ## Current State
 
-**Commit #1:** ✅ Project setup with raylib, basic window, VSCode integration  
-**Commit #2:** ✅ Logger system (thread-safe, colored console, printf-style)  
-**Commit #3:** ✅ Time system (DeltaTime, TimeScale, FPS tracking)  
-**Commit #4:** ✅ Event system (EventDispatcher, Window/Key/Mouse events)  
-**Commit #5:** ✅ Input Manager (polling API, KeyCode/MouseButton enums, platform abstraction)  
-**Commit #6:** ✅ Layer System (Layer base class, LayerStack with overlays)  
-**Commit #7:** ✅ Application Class (game loop, window management, layer orchestration)  
-**Commit #8:** ✅ Sprite System (texture loading, source rect, draw with rotation/scale)  
-**Commit #9:** ✅ Animation System (frame-based animation, AnimationController, FPS control)  
-**Commit #10:** ✅ Camera System (2D camera, zoom, bounds, coordinate transforms)  
+**Commit #1:** ✅ Project setup with raylib, basic window, VSCode integration
+**Commit #2:** ✅ Logger system (thread-safe, colored console, printf-style)
+**Commit #3:** ✅ Time system (DeltaTime, TimeScale, FPS tracking)
+**Commit #4:** ✅ Event system (EventDispatcher, Window/Key/Mouse events)
+**Commit #5:** ✅ Input Manager (polling API, KeyCode/MouseButton enums, platform abstraction)
+**Commit #6:** ✅ Layer System (Layer base class, LayerStack with overlays)
+**Commit #7:** ✅ Application Class (game loop, window management, layer orchestration)
+**Commit #8:** ✅ Sprite System (texture loading, source rect, draw with rotation/scale)
+**Commit #9:** ✅ Animation System (frame-based animation, AnimationController, FPS control)
+**Commit #10:** ✅ Camera System (2D camera, zoom, bounds, coordinate transforms)
 **Commit #11:** ✅ Tilemap System (2D tile grid, tileset loading, passable tiles, culling)
 **Commit #12:** ✅ Sprite Renderer (batching, texture sorting, draw call optimization)
 **Commit #13:** ✅ A* Pathfinding (path search, heuristic, obstacle avoidance)
+**Commit #14:** ⏭️ Resource Manager (SKIPPED - will implement later with more context)
+**Commit #15:** ✅ Unit System (8-directional animated units, path following, A* integration)
 
 ## Planned Commits
-
-**Commit #14:** ⏭️ Resource Manager (SKIPPED - will implement later with more context)
-**Commit #15:** Unit System (base Unit class, movement along path, sprite rendering)
 **Commit #16:** Selection System (mouse drag selection, multi-unit selection, visual feedback)
 **Commit #17:** Command System (right-click movement, unit queueing, pathfinding integration)
 
@@ -197,13 +196,32 @@ src/
 - A* pathfinding algorithm implementation
 - `FindPath()` static method takes start, goal, and passability check function
 - Returns `std::vector<Vector2>` of tile coordinates forming the path
-- Uses Manhattan distance heuristic (optimized for 4-directional movement)
+- Uses Manhattan distance heuristic for estimation
 - Open/Closed lists for node management
 - `PathNode` structure: x, y, g (cost from start), h (heuristic to goal), f (g+h), parent
-- 4-directional movement (N, S, E, W) - no diagonals (matches Warcraft 2)
+- **8-directional movement** (N, S, E, W + diagonals NE, NW, SE, SW)
+- Diagonal movement cost: √2 ≈ 1.414 (longer distance than straight)
+- Straight movement cost: 1.0
+- Corner cutting prevention: diagonal blocked if both adjacent straight tiles are walls
 - Integrates with `Tilemap::IsPassable()` for obstacle detection
 - Handles edge cases: unreachable goals, invalid start/goal, same start/goal
 - Memory management: properly cleans up allocated nodes after search
+- Fully commented code explaining A* algorithm line-by-line
+
+### Unit Specifics
+
+- `Unit` class in game/entities/ (game-specific, not engine)
+- 8-directional movement and animations (Up, Down, Left, Right + diagonals)
+- Sprite flipping for left-side directions (reuses right-side sprites)
+- Path following: moves along A* generated path, updates direction at each waypoint
+- Spritesheet structure: 51×40 pixel frames, 5 columns (directions) × 25 rows (animations)
+- Frame-independent movement: `speed * deltaTime` (default 80 px/s)
+- AnimationController integration: switches between idle/walk animations per direction
+- Direction detection: calculates angle to target using `atan2()`, maps to 8 directions (45° sectors)
+- Smooth animation transitions: auto-switches to walk when moving, idle when stopped
+- NaN protection: prevents division by zero when calculating direction vectors
+- Debug logging: tracks waypoint progress and path completion
+- Memory management: properly handles sprite and animation controller lifecycle
 
 ## Known Issues & Future Improvements
 
@@ -279,9 +297,10 @@ type: brief description
 12. ✅ Sprite renderer
 
 ### Phase 3: Game Logic (Commits 13-17)
+
 13. ✅ A* pathfinding
 14. ⏭️ Resource Manager (skipped)
-15. Unit system
+15. ✅ Unit system
 16. Selection system
 17. Movement commands
 

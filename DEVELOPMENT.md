@@ -28,7 +28,15 @@ This file contains project context for AI assistants working on this codebase.
 **Commit #9:** ✅ Animation System (frame-based animation, AnimationController, FPS control)  
 **Commit #10:** ✅ Camera System (2D camera, zoom, bounds, coordinate transforms)  
 **Commit #11:** ✅ Tilemap System (2D tile grid, tileset loading, passable tiles, culling)  
-**Commit #12:** ✅ Sprite Renderer (batching, texture sorting, draw call optimization)
+**Commit #12:** ✅ Sprite Renderer (batching, texture sorting, draw call optimization)  
+**Commit #13:** ✅ A* Pathfinding (path search, heuristic, obstacle avoidance)
+
+## Planned Commits
+
+**Commit #14:** Resource Manager (texture/sound caching, reference counting, memory optimization)  
+**Commit #15:** Unit System (base Unit class, movement along path, sprite rendering)  
+**Commit #16:** Selection System (mouse drag selection, multi-unit selection, visual feedback)  
+**Commit #17:** Command System (right-click movement, unit queueing, pathfinding integration)
 
 ## Architecture Decisions
 
@@ -172,6 +180,7 @@ src/
 - Spacing parameter handles pixel gaps between tiles in tileset (e.g., 1px margin)
 - Tile IDs match Tiled Map Editor directly (no conversion needed)
 - Assets organized: `assets/maps/winter/` (tileset.png, ground.csv, forest.csv)
+- **Note:** Each Tilemap loads its own tileset copy (no texture sharing yet). Will be optimized with Resource Manager
 
 ### SpriteRenderer Specifics
 - Batching system for optimizing sprite rendering
@@ -182,6 +191,39 @@ src/
 - Provides statistics: batch count (total sprites) and draw call count (GPU calls)
 - Used by Tilemap for efficient tile rendering
 - Performance benefit: ~800 tiles rendered with minimal draw calls instead of 800 separate GPU calls
+- **Note:** Currently shows 2 draw calls for ground+forest layers (same PNG loaded twice with different texture IDs). Will be fixed with Resource Manager
+
+### Pathfinder Specifics
+- A* pathfinding algorithm implementation
+- `FindPath()` static method takes start, goal, and passability check function
+- Returns `std::vector<Vector2>` of tile coordinates forming the path
+- Uses Manhattan distance heuristic (optimized for 4-directional movement)
+- Open/Closed lists for node management
+- `PathNode` structure: x, y, g (cost from start), h (heuristic to goal), f (g+h), parent
+- 4-directional movement (N, S, E, W) - no diagonals (matches Warcraft 2)
+- Integrates with `Tilemap::IsPassable()` for obstacle detection
+- Handles edge cases: unreachable goals, invalid start/goal, same start/goal
+- Memory management: properly cleans up allocated nodes after search
+
+## Known Issues & Future Improvements
+
+### Texture Duplication Issue
+**Problem:** Each `Tilemap` loads its own copy of the same tileset into GPU memory.
+- `groundLayer->LoadTileset("tileset.png")` → Texture ID 10
+- `forestLayer->LoadTileset("tileset.png")` → Texture ID 20 (duplicate!)
+- Result: 2x memory usage, 2 draw calls instead of 1
+
+**Current Impact:**
+- Minor performance hit (2 draw calls vs 1 for tilemap)
+- Wasted GPU memory (4 MB vs 2 MB for winter tileset)
+- Acceptable for current demo stage
+
+**Solution (Future Commit):** Resource Manager system
+- Centralized texture loading with path-based caching
+- `ResourceManager::GetTexture("tileset.png")` returns same instance
+- All tilemaps share single GPU texture → 1 draw call
+- Also needed for: unit sprites, building sprites, UI textures, effects
+- Will become critical when adding multiple tilesets, units, buildings
 
 ## Build System
 
@@ -237,7 +279,7 @@ type: brief description
 12. ✅ Sprite renderer
 
 ### Phase 3: Game Logic (Commits 13-17)
-13. A* pathfinding
+13. ✅ A* pathfinding
 14. Unit system
 15. Selection system
 16. Movement commands

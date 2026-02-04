@@ -7,6 +7,7 @@
 #include "engine/graphics/Tilemap.h"
 #include "engine/graphics/SpriteRenderer.h"
 #include "engine/pathfinding/Pathfinder.h"
+#include "game/entities/Unit.h"
 
 constexpr int WINDOW_WIDTH = 1280;
 constexpr int WINDOW_HEIGHT = 720;
@@ -33,11 +34,19 @@ public:
         forestLayer = new Engine::Tilemap(30, 20, 32);
         forestLayer->LoadTileset("assets/winter/tileset.png", 19, 1);
         forestLayer->LoadFromCSV("assets/winter/forest.csv");
-        
+
         LOG_INFO("Tilemap layers initialized (ground + forest)");
+
+        raylib::Vector2 unitStartPos = groundLayer->TileToWorld(5, 5);
+        unitStartPos.x += 16;
+        unitStartPos.y += 16;
+        unit = new Unit(unitStartPos);
+
+        LOG_INFO("Unit created at tile (5,5)");
     }
     
     void OnDetach() override {
+        delete unit;
         delete forestLayer;
         delete groundLayer;
         delete camera;
@@ -52,20 +61,39 @@ public:
         if (Engine::Input::IsKeyDown(Engine::KeyCode::A)) camera->Move({-cameraSpeed, 0});
         if (Engine::Input::IsKeyDown(Engine::KeyCode::D)) camera->Move({cameraSpeed, 0});
         
+        unit->Update(Engine::Time::GetDeltaTime());
+
         if (Engine::Input::IsMouseButtonPressed(Engine::MouseButton::Right)) {
             Engine::Vector2 mousePos = Engine::Input::GetMousePosition();
             raylib::Vector2 worldPos = camera->ScreenToWorld(raylib::Vector2(mousePos.x, mousePos.y));
             raylib::Vector2 tilePos = groundLayer->WorldToTile(worldPos);
-            
-            raylib::Vector2 startPos = {5, 5};
-            
-            currentPath = Engine::Pathfinder::FindPath(
-                startPos,
+
+            raylib::Vector2 unitTilePos = groundLayer->WorldToTile(unit->GetPosition());
+
+            std::vector<raylib::Vector2> path = Engine::Pathfinder::FindPath(
+                unitTilePos,
                 tilePos,
                 [this](int x, int y) {
                     return forestLayer->IsPassable(x, y);
                 }
             );
+
+            if (!path.empty()) {
+                std::vector<raylib::Vector2> worldPath;
+                for (const auto& tilePosInPath : path) {
+                    raylib::Vector2 worldPosInPath = groundLayer->TileToWorld(
+                        static_cast<int>(tilePosInPath.x),
+                        static_cast<int>(tilePosInPath.y)
+                    );
+                    worldPosInPath.x += 16;
+                    worldPosInPath.y += 16;
+                    worldPath.push_back(worldPosInPath);
+                }
+                LOG_INFO("Setting unit path with %d waypoints (from tile %.0f,%.0f to %.0f,%.0f)",
+                         worldPath.size(), unitTilePos.x, unitTilePos.y, tilePos.x, tilePos.y);
+                unit->SetPath(worldPath);
+                currentPath = path;
+            }
         }
         
         camera->Begin();
@@ -73,7 +101,9 @@ public:
         groundLayer->Draw(camera, renderer);
         forestLayer->Draw(camera, renderer);
         renderer->End();
-        
+
+        unit->Draw();
+
         if (!currentPath.empty()) {
             for (size_t i = 0; i < currentPath.size() - 1; i++) {
                 raylib::Vector2 p1 = groundLayer->TileToWorld(
@@ -90,9 +120,9 @@ public:
                 p2.x += 16;
                 p2.y += 16;
                 
-                DrawLineEx(p1, p2, 3.0f, YELLOW);
+                DrawLineEx(p1, p2, 2.0f, Fade(YELLOW, 0.3f));  // Полупрозрачная желтая линия (30%)
             }
-            
+
             for (const auto& node : currentPath) {
                 raylib::Vector2 worldPos = groundLayer->TileToWorld(
                     static_cast<int>(node.x),
@@ -100,14 +130,14 @@ public:
                 );
                 worldPos.x += 16;
                 worldPos.y += 16;
-                DrawCircle(static_cast<int>(worldPos.x), static_cast<int>(worldPos.y), 4, RED);
+                DrawCircle(static_cast<int>(worldPos.x), static_cast<int>(worldPos.y), 3, Fade(RED, 0.4f));  // Полупрозрачные красные точки (40%)
             }
         }
         
         camera->End();
         
-        DrawText("Pathfinding Demo", 20, 20, 30, RAYWHITE);
-        DrawText("WASD - scroll | Right Click - find path", 20, 60, 20, LIGHTGRAY);
+        DrawText("Unit System Demo", 20, 20, 30, RAYWHITE);
+        DrawText("WASD - scroll | Right Click - move unit", 20, 60, 20, LIGHTGRAY);
         
         char statsText[128];
         sprintf(statsText, "Batches: %d | Draw Calls: %d | Path nodes: %d", 
@@ -120,6 +150,7 @@ private:
     Engine::Tilemap* groundLayer = nullptr;
     Engine::Tilemap* forestLayer = nullptr;
     Engine::SpriteRenderer* renderer = nullptr;
+    Unit* unit = nullptr;
     std::vector<raylib::Vector2> currentPath;
 };
 
@@ -135,8 +166,8 @@ public:
 };
 
 int main() {
-    Engine::Logger::Get().SetMinLevel(Engine::LogLevel::INFO);
-    
+    Engine::Logger::Get().SetMinLevel(Engine::LogLevel::DEBUG);  // DEBUG для видимости всех логов
+
     LOG_INFO("=== Warcraft Engine Starting ===");
     
     WarcraftGame* game = new WarcraftGame();

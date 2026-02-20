@@ -52,5 +52,5 @@ choice /C YN /M "Run the game now"
 if %ERRORLEVEL% EQU 1 (
     echo.
     echo Starting game...
-    build\warcraft.exe
+    build\Debug\warcraft.exe
 )

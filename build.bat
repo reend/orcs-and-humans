@@ -6,19 +6,22 @@ echo   Warcraft Engine - Quick Build
 echo ======================================
 echo.
 
-REM Clean old build (DISABLED - use for full clean)
-REM echo [1/4] Cleaning old build...
-REM if exist build (
-REM     rmdir /s /q build
-REM     echo       Done
-REM ) else (
-REM     echo       No build folder found
-REM )
-REM echo.
+REM Add MSYS2 UCRT64 to PATH if not already present
+set "UCRT64=C:\msys64\ucrt64\bin"
+echo %PATH% | find /i "%UCRT64%" >nul || set "PATH=%UCRT64%;%PATH%"
+
+REM Verify compiler
+where gcc >nul 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    echo [ERROR] GCC not found. Install MSYS2 and run:
+    echo   pacman -S mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-ninja mingw-w64-ucrt-x86_64-cmake
+    pause
+    exit /b 1
+)
 
 REM Configure
 echo [1/3] Configuring with CMake...
-cmake -B build
+cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
 if %ERRORLEVEL% NEQ 0 (
     echo.
     echo [ERROR] CMake configuration failed!
@@ -44,7 +47,7 @@ REM Success
 echo [3/3] Build completed successfully!
 echo.
 echo ======================================
-echo   Executable: build\Debug\warcraft.exe
+echo   Executable: build\warcraft.exe
 echo ======================================
 echo.
 
@@ -52,5 +55,5 @@ choice /C YN /M "Run the game now"
 if %ERRORLEVEL% EQU 1 (
     echo.
     echo Starting game...
-    build\Debug\warcraft.exe
+    build\warcraft.exe
 )

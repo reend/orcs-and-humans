@@ -26,10 +26,8 @@ add_executable(${PROJECT_NAME}
     src/main.cpp
     src/engine/logging/Logger.cpp
     src/engine/core/Time.cpp
+    src/engine/core/Game.cpp
     src/engine/input/Input.cpp
-    src/engine/core/Layer.cpp
-    src/engine/core/LayerStack.cpp
-    src/engine/core/Application.cpp
     src/engine/graphics/Sprite.cpp
     src/engine/graphics/Animation.cpp
     src/engine/graphics/AnimationController.cpp
@@ -37,6 +35,9 @@ add_executable(${PROJECT_NAME}
     src/engine/graphics/Tilemap.cpp
     src/engine/graphics/SpriteRenderer.cpp
     src/engine/pathfinding/Pathfinder.cpp
+    src/game/WarcraftGame.cpp
+    src/game/world/Map.cpp
+    src/game/world/World.cpp
     src/game/entities/Unit.cpp
 )
 

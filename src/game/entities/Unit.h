@@ -3,42 +3,38 @@
 #include "engine/graphics/AnimationController.h"
 #include "raylib-cpp.hpp"
 #include <vector>
+#include <memory>
 
-enum class Direction {  // Направление движения юнита (8 направлений)
-    Up,         // Вверх (спиной к экрану)
-    UpRight,    // Вверх-вправо по диагонали
-    Right,      // Вправо
-    DownRight,  // Вниз-вправо по диагонали
-    Down,       // Вниз (лицом к экрану)
-    DownLeft,   // Вниз-влево по диагонали
-    Left,       // Влево
-    UpLeft      // Вверх-влево по диагонали
+enum class Direction {
+    Up, UpRight, Right, DownRight, Down, DownLeft, Left, UpLeft
 };
 
 class Unit {
 public:
-    Unit(raylib::Vector2 position);  // Конструктор: создать юнита в позиции
-    ~Unit();                         // Деструктор: очистить ресурсы
+    explicit Unit(raylib::Vector2 position);
 
-    void SetPath(const std::vector<raylib::Vector2>& path);  // Задать путь для движения (от A*)
-    void Update(float deltaTime);                            // Обновить состояние (движение, анимация)
-    void Draw();                                             // Отрисовать юнита
+    void SetPath(const std::vector<raylib::Vector2>& path);
+    void Update(float dt);
+    void Draw();
 
-    raylib::Vector2 GetPosition() const { return position; }     // Получить текущую позицию
-    bool IsMoving() const { return !path.empty(); }              // Проверка: юнит движется?
+    raylib::Vector2 GetPosition() const { return position; }
+    bool IsMoving()   const { return !path.empty(); }
+    bool IsSelected() const { return selected; }
+    void SetSelected(bool value) { selected = value; }
 
 private:
-    void LoadAnimations();       // Загрузить все анимации из spritesheet
-    void UpdateMovement(float deltaTime);  // Обновить движение по пути
-    Direction GetDirectionToTarget(raylib::Vector2 target);  // Определить направление к цели
-    void SetDirection(Direction dir);  // Установить направление (выбрать анимацию)
+    void LoadAnimations();
+    void UpdateMovement(float dt);
+    Direction GetDirectionToTarget(raylib::Vector2 target) const;
+    void SetDirection(Direction dir);
 
-    raylib::Vector2 position;         // Текущая позиция юнита в мире (пиксели)
-    std::vector<raylib::Vector2> path;  // Путь для движения (список точек)
-    int currentPathIndex;              // Текущая точка в пути (индекс)
-    float speed;                       // Скорость движения (пикселей/секунду)
+    raylib::Vector2 position;
+    std::vector<raylib::Vector2> path;
+    int   currentPathIndex = 0;
+    float speed            = 80.0f;
+    Direction currentDirection = Direction::Down;
+    bool  selected         = false;
 
-    Engine::Sprite* sprite;                       // Спрайт юнита (spritesheet)
-    Engine::AnimationController* animController;  // Контроллер анимаций
-    Direction currentDirection;                   // Текущее направление взгляда юнита
+    std::unique_ptr<Engine::Sprite>             sprite;
+    std::unique_ptr<Engine::AnimationController> animController;
 };

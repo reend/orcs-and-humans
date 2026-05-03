@@ -4,8 +4,11 @@
 namespace Engine {
 
 AnimationController::AnimationController(Sprite* sprite)
-    : sprite(sprite)
-    , currentAnimation(nullptr) {
+    : sprite(sprite) {}
+
+AnimationController::~AnimationController() {
+    for (auto& [name, anim] : animations)
+        delete anim;
 }
 
 void AnimationController::AddAnimation(const std::string& name, Animation* animation) {
@@ -18,41 +21,22 @@ void AnimationController::Play(const std::string& name) {
         LOG_WARN("Animation not found: %s", name.c_str());
         return;
     }
-    
-    if (currentAnimation != it->second) {
-        if (currentAnimation) {
-            currentAnimation->Stop();
-        }
-        
-        currentAnimation = it->second;
-        currentAnimationName = name;
-        currentAnimation->Reset();
-        currentAnimation->Play();
-    }
+    if (currentAnimation == it->second) return;
+
+    if (currentAnimation) currentAnimation->Stop();
+    currentAnimation = it->second;
+    currentAnimation->Reset();
+    currentAnimation->Play();
 }
 
 void AnimationController::Stop() {
-    if (currentAnimation) {
-        currentAnimation->Stop();
-    }
+    if (currentAnimation) currentAnimation->Stop();
 }
 
-void AnimationController::Update(float deltaTime) {
-    if (currentAnimation) {
-        currentAnimation->Update(deltaTime);
-        
-        if (sprite) {
-            sprite->SetSourceRect(currentAnimation->GetCurrentFrame());
-        }
-    }
-}
-
-Animation* AnimationController::GetAnimation(const std::string& name) {
-    auto it = animations.find(name);
-    if (it != animations.end()) {
-        return it->second;
-    }
-    return nullptr;
+void AnimationController::Update(float dt) {
+    if (!currentAnimation) return;
+    currentAnimation->Update(dt);
+    if (sprite) sprite->SetSourceRect(currentAnimation->GetCurrentFrame());
 }
 
 }

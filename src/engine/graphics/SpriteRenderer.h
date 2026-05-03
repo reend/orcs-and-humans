@@ -30,12 +30,11 @@ public:
     );
     void End();
     
-    void Flush();
-    
-    int GetBatchCount() const { return batchCount; }
+    int GetBatchCount()    const { return batchCount;    }
     int GetDrawCallCount() const { return drawCallCount; }
-    
+
 private:
+    void Flush();
     std::vector<SpriteBatch> batches;
     int batchCount;
     int drawCallCount;

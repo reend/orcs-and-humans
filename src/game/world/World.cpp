@@ -4,7 +4,6 @@
 #include "engine/pathfinding/Pathfinder.h"
 #include "engine/logging/Logger.h"
 #include "raylib.h"
-#include <cstdio>
 
 static constexpr float CAM_SPEED = 400.0f;
 
@@ -28,7 +27,7 @@ Unit* World::SpawnUnit(raylib::Vector2 worldPos) {
     auto unit = std::make_unique<Unit>(worldPos);
     Unit* ptr = unit.get();
     units.push_back(std::move(unit));
-    LOG_INFO("Unit spawned at (%.1f, %.1f)", worldPos.x, worldPos.y);
+    LOG_DEBUG("Unit spawned at (%.1f, %.1f)", worldPos.x, worldPos.y);
     return ptr;
 }
 
@@ -51,8 +50,7 @@ void World::HandleRightClick() {
     if (!Engine::Input::IsMouseButtonPressed(Engine::MouseButton::Right)) return;
     if (units.empty()) return;
 
-    Engine::Vector2 mouse = Engine::Input::GetMousePosition();
-    raylib::Vector2 worldPos = camera.ScreenToWorld({mouse.x, mouse.y});
+    raylib::Vector2 worldPos = camera.ScreenToWorld(Engine::Input::GetMousePosition());
     raylib::Vector2 tilePos  = map.WorldToTile(worldPos);
 
     Unit* unit = units[0].get();
@@ -70,7 +68,7 @@ void World::HandleRightClick() {
 
     unit->SetPath(worldPath);
     debugPath = path;
-    LOG_INFO("Path set: %d waypoints -> tile (%.0f, %.0f)", (int)path.size(), tilePos.x, tilePos.y);
+    LOG_DEBUG("Path set: %d waypoints -> tile (%.0f, %.0f)", (int)path.size(), tilePos.x, tilePos.y);
 }
 
 void World::Render() {

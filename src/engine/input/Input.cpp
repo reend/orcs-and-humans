@@ -27,9 +27,8 @@ bool Input::IsMouseButtonReleased(MouseButton button) {
     return ::IsMouseButtonReleased(MouseButtonToRaylib(button));
 }
 
-Vector2 Input::GetMousePosition() {
-    ::Vector2 pos = ::GetMousePosition();
-    return {pos.x, pos.y};
+raylib::Vector2 Input::GetMousePosition() {
+    return ::GetMousePosition();
 }
 
 float Input::GetMouseWheelMove() {

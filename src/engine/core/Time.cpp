@@ -19,8 +19,9 @@ Time& Time::Get() {
 }
 
 void Time::Update() {
-    Get().deltaTime = ::GetFrameTime();
-    Get().totalTime = ::GetTime();
+    Time& t = Get();
+    t.deltaTime = ::GetFrameTime();
+    t.totalTime = ::GetTime();
 }
 
 float Time::GetDeltaTime() {

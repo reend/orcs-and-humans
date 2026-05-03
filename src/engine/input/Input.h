@@ -1,4 +1,5 @@
 #pragma once
+#include "raylib-cpp.hpp"
 
 namespace Engine {
 
@@ -12,29 +13,20 @@ enum class KeyCode {
     LeftShift, RightShift, LeftCtrl, RightCtrl, LeftAlt, RightAlt
 };
 
-enum class MouseButton {
-    Left = 0,
-    Right = 1,
-    Middle = 2
-};
-
-struct Vector2 {
-    float x;
-    float y;
-};
+enum class MouseButton { Left = 0, Right = 1, Middle = 2 };
 
 class Input {
 public:
     static bool IsKeyPressed(KeyCode key);
     static bool IsKeyDown(KeyCode key);
     static bool IsKeyReleased(KeyCode key);
-    
+
     static bool IsMouseButtonPressed(MouseButton button);
     static bool IsMouseButtonDown(MouseButton button);
     static bool IsMouseButtonReleased(MouseButton button);
-    
-    static Vector2 GetMousePosition();
-    static float GetMouseWheelMove();
+
+    static raylib::Vector2 GetMousePosition();
+    static float           GetMouseWheelMove();
 
 private:
     static int KeyCodeToRaylib(KeyCode key);

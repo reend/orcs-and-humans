@@ -3,19 +3,15 @@
 
 namespace Engine {
 
-Time* Time::instance = nullptr;
-
-Time::Time() 
+Time::Time()
     : deltaTime(0.0f)
     , timeScale(1.0f)
     , totalTime(0.0) {
 }
 
 Time& Time::Get() {
-    if (!instance) {
-        instance = new Time();
-    }
-    return *instance;
+    static Time instance;
+    return instance;
 }
 
 void Time::Update() {
@@ -25,7 +21,8 @@ void Time::Update() {
 }
 
 float Time::GetDeltaTime() {
-    return Get().deltaTime * Get().timeScale;
+    Time& t = Get();
+    return t.deltaTime * t.timeScale;
 }
 
 float Time::GetUnscaledDeltaTime() {

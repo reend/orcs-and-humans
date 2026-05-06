@@ -34,17 +34,17 @@ void Unit::LoadAnimations() {
     };
 
     for (const auto& col : cols) {
-        auto* idle = new Engine::Animation();
+        auto idle = std::make_unique<Engine::Animation>();
         idle->AddFrame({col.x, 0, SPRITE_W, SPRITE_H});
         idle->SetLoop(true);
-        animController->AddAnimation(std::string("idle_") + col.name, idle);
+        animController->AddAnimation(std::string("idle_") + col.name, std::move(idle));
 
-        auto* walk = new Engine::Animation();
+        auto walk = std::make_unique<Engine::Animation>();
         for (int row = 1; row <= 4; row++)
             walk->AddFrame({col.x, row * SPRITE_H, SPRITE_W, SPRITE_H});
         walk->SetFPS(8);
         walk->SetLoop(true);
-        animController->AddAnimation(std::string("walk_") + col.name, walk);
+        animController->AddAnimation(std::string("walk_") + col.name, std::move(walk));
     }
 }
 

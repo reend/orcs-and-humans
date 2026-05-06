@@ -15,7 +15,7 @@ void Map::LoadForest(const std::string& tileset, int tilesPerRow, int spacing, c
 }
 
 bool Map::IsPassable(int x, int y) const {
-    if (!ground.IsValidPosition(x, y)) return false;
+    if (!IsValid(x, y)) return false;
     return forest.GetTile(x, y).id == -1;
 }
 

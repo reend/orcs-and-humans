@@ -1,5 +1,6 @@
 #include "Tilemap.h"
 #include "engine/logging/Logger.h"
+#include <algorithm>
 #include <fstream>
 #include <sstream>
 
@@ -10,8 +11,7 @@ Tilemap::Tilemap(int mapWidth, int mapHeight, int tileSize)
     , mapHeight(mapHeight)
     , tileSize(tileSize)
     , tilesPerRow(0)
-    , spacing(0)
-    , tilesetSprite(nullptr) {
+    , spacing(0) {
     
     tiles.resize(mapHeight);
     for (int y = 0; y < mapHeight; y++) {
@@ -24,23 +24,18 @@ Tilemap::Tilemap(int mapWidth, int mapHeight, int tileSize)
     LOG_DEBUG("Tilemap created: %dx%d tiles, size %d", mapWidth, mapHeight, tileSize);
 }
 
-Tilemap::~Tilemap() {
-    delete tilesetSprite;
-}
-
 bool Tilemap::LoadTileset(const std::string& tilesetPath, int tilesPerRow, int spacing) {
     this->tilesPerRow = tilesPerRow;
     this->spacing = spacing;
-    
-    tilesetSprite = new Sprite(tilesetPath);
-    
+
+    tilesetSprite = std::make_unique<Sprite>(tilesetPath);
+
     if (!tilesetSprite->IsLoaded()) {
         LOG_ERROR("Failed to load tileset: %s", tilesetPath.c_str());
-        delete tilesetSprite;
-        tilesetSprite = nullptr;
+        tilesetSprite.reset();
         return false;
     }
-    
+
     LOG_INFO("Tileset loaded: %s (%d tiles per row, spacing %d)", tilesetPath.c_str(), tilesPerRow, spacing);
     return true;
 }
@@ -95,14 +90,7 @@ bool Tilemap::LoadFromCSV(const std::string& csvPath) {
     
     for (int y = 0; y < mapHeight; y++) {
         for (int x = 0; x < mapWidth; x++) {
-            int tileId = tempData[y][x];
-            if (tileId == -1) {
-                tiles[y][x].id = -1;
-                tiles[y][x].passable = true;
-            } else {
-                tiles[y][x].id = tileId;
-                tiles[y][x].passable = true;
-            }
+            tiles[y][x] = {tempData[y][x], true};
         }
     }
     
@@ -156,10 +144,10 @@ void Tilemap::Draw(Camera2D* camera, SpriteRenderer* renderer) {
     int endX = startX + (::GetScreenWidth() / tileSize) + 4;
     int endY = startY + (::GetScreenHeight() / tileSize) + 4;
     
-    if (startX < 0) startX = 0;
-    if (startY < 0) startY = 0;
-    if (endX > mapWidth) endX = mapWidth;
-    if (endY > mapHeight) endY = mapHeight;
+    startX = std::clamp(startX, 0, mapWidth);
+    startY = std::clamp(startY, 0, mapHeight);
+    endX   = std::clamp(endX,   0, mapWidth);
+    endY   = std::clamp(endY,   0, mapHeight);
     
     for (int y = startY; y < endY; y++) {
         for (int x = startX; x < endX; x++) {

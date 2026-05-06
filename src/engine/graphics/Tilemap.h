@@ -2,6 +2,7 @@
 #include "Sprite.h"
 #include "Camera2D.h"
 #include "SpriteRenderer.h"
+#include <memory>
 #include <vector>
 
 namespace Engine {
@@ -14,7 +15,7 @@ struct Tile {
 class Tilemap {
 public:
     Tilemap(int mapWidth, int mapHeight, int tileSize);
-    ~Tilemap();
+    ~Tilemap() = default;
     
     bool LoadTileset(const std::string& tilesetPath, int tilesPerRow, int spacing = 0);
     bool LoadFromCSV(const std::string& csvPath);
@@ -36,7 +37,7 @@ public:
     
 private:
     std::vector<std::vector<Tile>> tiles;
-    Sprite* tilesetSprite;
+    std::unique_ptr<Sprite> tilesetSprite;
     
     int mapWidth;
     int mapHeight;

@@ -45,7 +45,6 @@ private:
     const char* LevelColor(LogLevel level) const;
     const char* LevelStr(LogLevel level)   const;
 
-    static Logger* instance;
     LogLevel minLevel;
 };
 

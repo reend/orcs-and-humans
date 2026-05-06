@@ -4,8 +4,6 @@
 
 namespace Engine {
 
-Logger* Logger::instance = nullptr;
-
 Logger::Logger() : minLevel(LogLevel::DEBUG) {
     HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
     DWORD mode;
@@ -14,8 +12,8 @@ Logger::Logger() : minLevel(LogLevel::DEBUG) {
 }
 
 Logger& Logger::Get() {
-    if (!instance) instance = new Logger();
-    return *instance;
+    static Logger instance;
+    return instance;
 }
 
 void Logger::SetMinLevel(LogLevel level) {

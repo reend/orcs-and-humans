@@ -16,8 +16,7 @@ struct SpriteBatch {
 class SpriteRenderer {
 public:
     SpriteRenderer();
-    ~SpriteRenderer();
-    
+
     void Begin();
     void DrawSprite(
         raylib::Texture2D* texture,
@@ -36,9 +35,9 @@ public:
 private:
     void Flush();
     std::vector<SpriteBatch> batches;
-    int batchCount;
-    int drawCallCount;
-    bool isDrawing;
+    int  batchCount    = 0;
+    int  drawCallCount = 0;
+    bool isDrawing     = false;
 };
 
 }

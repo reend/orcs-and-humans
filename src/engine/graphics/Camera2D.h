@@ -28,7 +28,10 @@ private:
 
     raylib::Camera2D camera;
     bool  boundsEnabled = false;
-    float minX = 0, minY = 0, maxX = 0, maxY = 0;
+    float minX = 0;
+    float minY = 0;
+    float maxX = 0;
+    float maxY = 0;
 };
 
 }

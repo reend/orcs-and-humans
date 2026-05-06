@@ -6,13 +6,8 @@ namespace Engine {
 AnimationController::AnimationController(Sprite* sprite)
     : sprite(sprite) {}
 
-AnimationController::~AnimationController() {
-    for (auto& [name, anim] : animations)
-        delete anim;
-}
-
-void AnimationController::AddAnimation(const std::string& name, Animation* animation) {
-    animations[name] = animation;
+void AnimationController::AddAnimation(const std::string& name, std::unique_ptr<Animation> animation) {
+    animations[name] = std::move(animation);
 }
 
 void AnimationController::Play(const std::string& name) {
@@ -21,10 +16,10 @@ void AnimationController::Play(const std::string& name) {
         LOG_WARN("Animation not found: %s", name.c_str());
         return;
     }
-    if (currentAnimation == it->second) return;
+    if (currentAnimation == it->second.get()) return;
 
     if (currentAnimation) currentAnimation->Stop();
-    currentAnimation = it->second;
+    currentAnimation = it->second.get();
     currentAnimation->Reset();
     currentAnimation->Play();
 }

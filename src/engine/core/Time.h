@@ -4,12 +4,10 @@ namespace Engine {
 
 class Time {
 private:
-    static Time* instance;
-    
     float deltaTime;
     float timeScale;
     double totalTime;
-    
+
     Time();
     ~Time() = default;
 

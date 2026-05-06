@@ -4,14 +4,8 @@
 
 namespace Engine {
 
-SpriteRenderer::SpriteRenderer() 
-    : batchCount(0)
-    , drawCallCount(0)
-    , isDrawing(false) {
+SpriteRenderer::SpriteRenderer() {
     batches.reserve(1000);
-}
-
-SpriteRenderer::~SpriteRenderer() {
 }
 
 void SpriteRenderer::Begin() {

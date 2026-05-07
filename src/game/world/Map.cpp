@@ -1,17 +1,23 @@
 #include "Map.h"
+#include "engine/logging/Logger.h"
+#include <cstdlib>
 
 Map::Map(int width, int height, int tileSize)
     : ground(width, height, tileSize)
     , forest(width, height, tileSize) {}
 
 void Map::LoadGround(const std::string& tileset, int tilesPerRow, int spacing, const std::string& csv) {
-    ground.LoadTileset(tileset, tilesPerRow, spacing);
-    ground.LoadFromCSV(csv);
+    if (!ground.LoadTileset(tileset, tilesPerRow, spacing) || !ground.LoadFromCSV(csv)) {
+        LOG_ERROR("Critical: failed to load ground layer. Aborting.");
+        std::abort();
+    }
 }
 
 void Map::LoadForest(const std::string& tileset, int tilesPerRow, int spacing, const std::string& csv) {
-    forest.LoadTileset(tileset, tilesPerRow, spacing);
-    forest.LoadFromCSV(csv);
+    if (!forest.LoadTileset(tileset, tilesPerRow, spacing) || !forest.LoadFromCSV(csv)) {
+        LOG_ERROR("Critical: failed to load forest layer. Aborting.");
+        std::abort();
+    }
 }
 
 bool Map::IsPassable(int x, int y) const {

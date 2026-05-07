@@ -1,6 +1,7 @@
 #include "Unit.h"
 #include "engine/logging/Logger.h"
 #include <cmath>
+#include <cstdlib>
 
 static constexpr float SPRITE_W    = 51.0f;
 static constexpr float SPRITE_H    = 40.0f;
@@ -15,7 +16,11 @@ static constexpr const char* DIR_SUFFIX[] = {
 Unit::Unit(raylib::Vector2 position)
     : position(position)
     , currentDirection(Direction::Down) {
-    sprite         = std::make_unique<Engine::Sprite>("assets/units/orcs/peon/peon.png");
+    sprite = std::make_unique<Engine::Sprite>("assets/units/orcs/peon/peon.png");
+    if (!sprite->IsLoaded()) {
+        LOG_ERROR("Critical: failed to load unit sprite. Aborting.");
+        std::abort();
+    }
     animController = std::make_unique<Engine::AnimationController>(sprite.get());
     LoadAnimations();
     animController->Play("idle_down");

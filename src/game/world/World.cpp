@@ -81,7 +81,7 @@ void World::Render() {
     for (auto& unit : units)
         unit->Draw();
 
-    RenderDebugPath();
+    // RenderDebugPath();
     camera.End();
 
     RenderHUD();

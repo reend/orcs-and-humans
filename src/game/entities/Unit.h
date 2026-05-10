@@ -34,7 +34,7 @@ private:
     raylib::Vector2 position;
     std::vector<raylib::Vector2> path;
     int   currentPathIndex = 0;
-    float speed            = 80.0f;
+    float speed            = 120.0f;
     Direction currentDirection = Direction::Down;
     bool  selected         = false;
 

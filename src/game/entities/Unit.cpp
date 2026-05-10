@@ -29,6 +29,7 @@ Unit::Unit(raylib::Vector2 position)
         LOG_ERROR("Critical: failed to load unit sprite. Aborting.");
         std::abort();
     }
+    SetTextureFilter(*sprite->GetTexture(), TEXTURE_FILTER_POINT);
     animController = std::make_unique<Engine::AnimationController>(sprite.get());
     LoadAnimations();
     animController->Play("idle_down");
@@ -55,7 +56,7 @@ void Unit::LoadAnimations() {
         auto walk = std::make_unique<Engine::Animation>();
         for (int row = 1; row <= 4; row++)
             walk->AddFrame({col.x, row * SPRITE_H, SPRITE_W, SPRITE_H});
-        walk->SetFPS(8);
+        walk->SetFPS(16);
         walk->SetLoop(true);
         animController->AddAnimation(std::string("walk_") + col.name, std::move(walk));
     }

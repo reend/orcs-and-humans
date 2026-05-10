@@ -15,11 +15,12 @@ void World::Init() {
     map.LoadGround("assets/winter/tileset.png", 19, 1, "assets/winter/ground.csv");
     map.LoadForest("assets/winter/tileset.png", 19, 1, "assets/winter/forest.csv");
 
-    camera.SetZoom(1.5f);
+    camera.SetZoom(2.0f);
     camera.SetBounds(0, 0, 960, 640);
     camera.EnableBounds(true);
 
     SpawnUnit(map.TileCenter(5, 5));
+    SpawnUnit(map.TileCenter(7, 5));
     LOG_INFO("World initialized");
 }
 
@@ -33,6 +34,7 @@ Unit* World::SpawnUnit(raylib::Vector2 worldPos) {
 
 void World::Update(float dt) {
     MoveCamera(dt);
+    HandleLeftClick();
     HandleRightClick();
     for (auto& unit : units)
         unit->Update(dt);
@@ -53,22 +55,59 @@ void World::HandleRightClick() {
     raylib::Vector2 worldPos = camera.ScreenToWorld(Engine::Input::GetMousePosition());
     raylib::Vector2 tilePos  = map.WorldToTile(worldPos);
 
-    Unit* unit = units[0].get();
-    raylib::Vector2 unitTile = map.WorldToTile(unit->GetPosition());
+    for (auto& unit : units) {
+        if (!unit->IsSelected()) continue;
+        raylib::Vector2 unitTile = map.WorldToTile(unit->GetPosition());
 
-    auto path = Engine::Pathfinder::FindPath(unitTile, tilePos,
-        [this](int x, int y) { return map.IsPassable(x, y); });
+        auto path = Engine::Pathfinder::FindPath(unitTile, tilePos,
+            [this](int x, int y) { return map.IsPassable(x, y); });
 
-    if (path.empty()) return;
+        if (path.empty()) continue;
 
-    std::vector<raylib::Vector2> worldPath;
-    worldPath.reserve(path.size());
-    for (const auto& t : path)
-        worldPath.push_back(map.TileCenter((int)t.x, (int)t.y));
+        std::vector<raylib::Vector2> worldPath;
+        worldPath.reserve(path.size());
+        for (const auto& t : path)
+            worldPath.push_back(map.TileCenter((int)t.x, (int)t.y));
 
-    unit->SetPath(worldPath);
-    debugPath = path;
-    LOG_DEBUG("Path set: %d waypoints -> tile (%.0f, %.0f)", (int)path.size(), tilePos.x, tilePos.y);
+        unit->SetPath(worldPath);
+        debugPath = path;
+        LOG_DEBUG("Path set: %d waypoints -> tile (%.0f, %.0f)", (int)path.size(), tilePos.x, tilePos.y);
+    }
+}
+
+Rectangle World::GetDragRect() const {
+    return {
+        std::min(dragStart.x, dragCurrent.x),
+        std::min(dragStart.y, dragCurrent.y),
+        std::abs(dragCurrent.x - dragStart.x),
+        std::abs(dragCurrent.y - dragStart.y)
+    };
+}
+
+void World::RenderSelectionRect() {
+    if (!isDragging) return;
+    DrawRectangleLinesEx(GetDragRect(), 2.0f, GREEN);
+}
+
+void World::HandleLeftClick() {
+    if (Engine::Input::IsMouseButtonPressed(Engine::MouseButton::Left)) {
+        dragStart = Engine::Input::GetMousePosition();
+        isDragging = true;
+    }
+
+    if (isDragging) {
+        dragCurrent = Engine::Input::GetMousePosition();
+    }
+
+    if (Engine::Input::IsMouseButtonReleased(Engine::MouseButton::Left)) {
+        isDragging = false;
+
+        Rectangle selRect = GetDragRect();
+
+        for (auto& unit : units) {
+            raylib::Vector2 screenPos = camera.WorldToScreen(unit->GetPosition());
+            unit->SetSelected(CheckCollisionPointRec(screenPos, selRect));        }
+    }
 }
 
 void World::Render() {
@@ -100,7 +139,7 @@ void World::RenderDebugPath() {
 }
 
 void World::RenderHUD() {
-    DrawText("WASD - scroll | Right Click - move unit", 20, 20, 20, LIGHTGRAY);
+    RenderSelectionRect();
 
     char stats[128];
     std::snprintf(stats, sizeof(stats), "Batches: %d | Draw Calls: %d | Path: %d nodes",

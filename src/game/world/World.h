@@ -19,8 +19,11 @@ public:
 private:
     void MoveCamera(float dt);
     void HandleRightClick();
+    void HandleLeftClick();
     void RenderDebugPath();
     void RenderHUD();
+    void RenderSelectionRect();
+    
 
     Map map;
     Engine::Camera2D camera;
@@ -28,4 +31,9 @@ private:
 
     std::vector<std::unique_ptr<Unit>> units;
     std::vector<raylib::Vector2> debugPath;
+
+    bool isDragging = false;
+    raylib::Vector2 dragStart;
+    raylib::Vector2 dragCurrent;
+    Rectangle GetDragRect() const;
 };

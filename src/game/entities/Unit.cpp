@@ -10,8 +10,14 @@ static constexpr float SEL_OFFS_Y  = 35.0f;
 static constexpr float SEL_RADIUS  = 14.0f;
 
 static constexpr const char* DIR_SUFFIX[] = {
-    "up", "upright", "right", "downright", "down", "downright", "right", "upright"
+    "up", "upright", "right", "downright", "down",
 };
+
+static const char* DirSuffix(Direction dir) {
+    int idx = (int)dir;
+    if (idx > 4) idx = 8 - idx;
+    return DIR_SUFFIX[idx];
+}
 
 Unit::Unit(raylib::Vector2 position)
     : position(position)
@@ -77,7 +83,7 @@ void Unit::UpdateMovement(float dt) {
         if (++currentPathIndex >= (int)path.size()) {
             path.clear();
             currentPathIndex = 0;
-            animController->Play(std::string("idle_") + DIR_SUFFIX[(int)currentDirection]);
+            animController->Play(std::string("idle_") + DirSuffix(currentDirection));
             return;
         }
         SetDirection(GetDirectionToTarget(path[currentPathIndex]));
@@ -105,7 +111,7 @@ Direction Unit::GetDirectionToTarget(raylib::Vector2 target) const {
 void Unit::SetDirection(Direction dir) {
     if (dir == currentDirection) return;
     currentDirection = dir;
-    animController->Play(std::string("walk_") + DIR_SUFFIX[(int)dir]);
+    animController->Play(std::string("walk_") + DirSuffix(dir));
 }
 
 void Unit::Draw() {

@@ -12,7 +12,7 @@ static const raylib::Vector2 OFFSETS[] = {
 };
 
 World::World()
-    : map(30, 20, 32)
+    : map(128, 128, 32)
     , camera(0.0f, 0.0f) {}
 
 void World::Init() {
@@ -20,7 +20,7 @@ void World::Init() {
     map.LoadForest("assets/winter/tileset.png", 19, 1, "assets/winter/forest.csv");
 
     camera.SetZoom(2.0f);
-    camera.SetBounds(0, 0, 960, 640);
+    camera.SetBounds(0, 0, 128 * 32, 128 * 32);
     camera.EnableBounds(true);
 
     SpawnUnit(map.TileCenter(5, 5));

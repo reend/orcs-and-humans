@@ -128,7 +128,7 @@ void Unit::Draw() {
     DrawTexturePro(
         *sprite->GetTexture(),
         src,
-        {position.x, position.y, SPRITE_W, SPRITE_H},
+        {std::round(position.x), std::round(position.y), SPRITE_W, SPRITE_H},
         {0, 0},
         0.0f,
         WHITE

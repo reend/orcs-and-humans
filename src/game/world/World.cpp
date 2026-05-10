@@ -19,7 +19,7 @@ void World::Init() {
     map.LoadGround("assets/winter/tileset.png", 19, 1, "assets/winter/ground.csv");
     map.LoadForest("assets/winter/tileset.png", 19, 1, "assets/winter/forest.csv");
 
-    camera.SetZoom(2.0f);
+    camera.SetZoom(1.8f);
     camera.SetBounds(0, 0, 960, 640);
     camera.EnableBounds(true);
 

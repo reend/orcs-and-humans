@@ -4,8 +4,12 @@
 #include "engine/pathfinding/Pathfinder.h"
 #include "engine/logging/Logger.h"
 #include "raylib.h"
+#include <algorithm>
 
 static constexpr float CAM_SPEED = 400.0f;
+static const raylib::Vector2 OFFSETS[] = {
+    {0,0}, {1,0}, {-1,0}, {0,1}, {0,-1}, {1,1}, {-1,1}, {1,-1}, {-1,-1}
+};
 
 World::World()
     : map(30, 20, 32)
@@ -38,6 +42,7 @@ void World::Update(float dt) {
     HandleRightClick();
     for (auto& unit : units)
         unit->Update(dt);
+    collision.Resolve(units);
 }
 
 void World::MoveCamera(float dt) {
@@ -55,11 +60,16 @@ void World::HandleRightClick() {
     raylib::Vector2 worldPos = camera.ScreenToWorld(Engine::Input::GetMousePosition());
     raylib::Vector2 tilePos  = map.WorldToTile(worldPos);
 
+    int slot = 0;
     for (auto& unit : units) {
         if (!unit->IsSelected()) continue;
         raylib::Vector2 unitTile = map.WorldToTile(unit->GetPosition());
 
-        auto path = Engine::Pathfinder::FindPath(unitTile, tilePos,
+        raylib::Vector2 target = { tilePos.x + OFFSETS[slot % 9].x,
+            tilePos.y + OFFSETS[slot % 9].y };
+        slot++;
+
+        auto path = Engine::Pathfinder::FindPath(unitTile, target,
             [this](int x, int y) { return map.IsPassable(x, y); });
 
         if (path.empty()) continue;
@@ -117,7 +127,15 @@ void World::Render() {
     map.Draw(&camera, &renderer);
     renderer.End();
 
-    for (auto& unit : units)
+    std::vector<Unit*> sorted;
+    for (auto& u : units) sorted.push_back(u.get());
+    std::sort(sorted.begin(), sorted.end(), [](Unit* a, Unit* b) {
+        return a->GetPosition().y < b->GetPosition().y;
+    });
+
+    for (auto* unit : sorted) 
+        unit->DrawShadow();
+    for (auto& unit : sorted)
         unit->Draw();
 
     // RenderDebugPath();

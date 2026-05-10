@@ -6,8 +6,8 @@
 static constexpr float SPRITE_W    = 51.0f;
 static constexpr float SPRITE_H    = 40.0f;
 static constexpr float SEL_OFFS_X  = 25.0f;
-static constexpr float SEL_OFFS_Y  = 35.0f;
-static constexpr float SEL_RADIUS  = 14.0f;
+static constexpr float SEL_OFFS_Y  = 25.0f;
+static constexpr float SEL_RADIUS  = 15.0f;
 
 static constexpr const char* DIR_SUFFIX[] = {
     "up", "upright", "right", "downright", "down",
@@ -18,6 +18,8 @@ static const char* DirSuffix(Direction dir) {
     if (idx > 4) idx = 8 - idx;
     return DIR_SUFFIX[idx];
 }
+
+static constexpr float ARRIVAL_DIST = 30.0f;
 
 Unit::Unit(raylib::Vector2 position)
     : position(position)
@@ -79,7 +81,7 @@ void Unit::UpdateMovement(float dt) {
     float dy   = target.y - position.y;
     float dist = std::sqrt(dx * dx + dy * dy);
 
-    if (dist < 2.0f) {
+    if (dist < ARRIVAL_DIST) {
         if (++currentPathIndex >= (int)path.size()) {
             path.clear();
             currentPathIndex = 0;
@@ -130,7 +132,16 @@ void Unit::Draw() {
         0.0f,
         WHITE
     );
+}
 
-    if (selected)
-        DrawCircleLines((int)(position.x + SEL_OFFS_X), (int)(position.y + SEL_OFFS_Y), SEL_RADIUS, GREEN);
+void Unit::DrawShadow() {
+    if (selected) {
+        DrawEllipse((int)(position.x + SEL_OFFS_X), (int)(position.y + SEL_OFFS_Y),
+            SEL_RADIUS, SEL_RADIUS * 0.4f, Fade(GREEN, 0.4f));
+    }
+}
+
+void Unit::PushBy(raylib::Vector2 offset) {
+    position.x += offset.x;
+    position.y += offset.y;
 }

@@ -5,7 +5,7 @@
 #include "engine/graphics/Camera2D.h"
 #include "engine/graphics/SpriteRenderer.h"
 #include "game/entities/Unit.h"
-
+#include "engine/physics/CollisionSystem.h"
 class World {
 public:
     World();
@@ -36,4 +36,6 @@ private:
     raylib::Vector2 dragStart;
     raylib::Vector2 dragCurrent;
     Rectangle GetDragRect() const;
+
+    Engine::CollisionSystem collision;
 };

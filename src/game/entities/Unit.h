@@ -22,6 +22,9 @@ public:
     bool IsSelected() const { return selected; }
     void SetSelected(bool value) { selected = value; }
 
+    void PushBy(raylib::Vector2 offset);
+    void DrawShadow();
+
 private:
     void LoadAnimations();
     void UpdateMovement(float dt);

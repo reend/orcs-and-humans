@@ -39,6 +39,7 @@ add_executable(${PROJECT_NAME}
     src/game/world/Map.cpp
     src/game/world/World.cpp
     src/game/entities/Unit.cpp
+    src/engine/physics/CollisionSystem.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

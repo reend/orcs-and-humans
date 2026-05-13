@@ -21,7 +21,7 @@ if %ERRORLEVEL% NEQ 0 (
 
 REM Configure
 echo [1/3] Configuring with CMake...
-cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
+cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 if %ERRORLEVEL% NEQ 0 (
     echo.
     echo [ERROR] CMake configuration failed!

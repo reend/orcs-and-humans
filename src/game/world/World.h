@@ -1,11 +1,16 @@
 #pragma once
 #include <vector>
 #include <memory>
+
 #include "Map.h"
 #include "engine/graphics/Camera2D.h"
 #include "engine/graphics/SpriteRenderer.h"
-#include "game/entities/Unit.h"
 #include "engine/physics/CollisionSystem.h"
+
+#include "game/entities/Unit.h"
+#include "game/entities/Building.h"
+
+
 class World {
 public:
     World();
@@ -38,4 +43,6 @@ private:
     Rectangle GetDragRect() const;
 
     Engine::CollisionSystem collision;
+
+    std::vector<std::unique_ptr<Building>> buildings;
 };

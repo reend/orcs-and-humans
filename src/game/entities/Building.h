@@ -1,13 +1,25 @@
 #pragma once
 #include "engine/graphics/Sprite.h"
-#include <vector>
+#include "engine/graphics/SpriteRenderer.h"
+#include "raylib-cpp.hpp"
 #include <memory>
+
+enum class BuildingType
+{
+    GreatHall
+};
 
 class Building {
 public:
-    Building(raylib::Vector2 worldpos, const char *spritePath);
-    void Draw();
+    Building(raylib::Vector2 tilePos, BuildingType type);
+
+    void Draw(Engine::SpriteRenderer *renderer);
+    raylib::Vector2 GetPosition() const;
+
 private:
-    raylib::Vector2 position;
-    std::unique_ptr<Engine::Sprite> sprite;
+    raylib::Vector2   tilePos;
+    BuildingType      type;
+    raylib::Rectangle srcRect;
+
+    static std::unique_ptr<Engine::Sprite> sheet;
 };

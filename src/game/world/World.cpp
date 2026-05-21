@@ -25,6 +25,8 @@ void World::Init() {
 
     SpawnUnit(map.TileCenter(5, 5));
     SpawnUnit(map.TileCenter(7, 5));
+
+    buildings.push_back(std::make_unique<Building>(raylib::Vector2{8, 6}, BuildingType::GreatHall));
     LOG_INFO("World initialized");
 }
 
@@ -127,33 +129,28 @@ void World::Render() {
     map.Draw(&camera, &renderer);
     renderer.End();
 
-    std::vector<Unit*> sorted;
-    for (auto& u : units) sorted.push_back(u.get());
-    std::sort(sorted.begin(), sorted.end(), [](Unit* a, Unit* b) {
-        return a->GetPosition().y < b->GetPosition().y;
-    });
+    using DrawEntry = std::pair<float, std::function<void()>>;
+    std::vector<DrawEntry> drawList;
 
-    for (auto* unit : sorted) 
-        unit->DrawShadow();
-    for (auto& unit : sorted)
-        unit->Draw();
+    for (auto& u : units)
+        drawList.push_back({u->GetPosition().y, [u = u.get()]{ u->Draw(); }});
+    
+    for (auto& b : buildings)
+        drawList.push_back({b->GetPosition().y, [b = b.get(), this]{ b->Draw(&renderer); }});
 
-    // RenderDebugPath();
+    std::sort(drawList.begin(), drawList.end(),
+              [](const DrawEntry &a, const DrawEntry &b)
+              { return a.first < b.first; });
+
+    for (auto& u : units) u->DrawShadow();
+
+    renderer.Begin();
+    for (auto& [y, draw] : drawList) draw();
+    renderer.End();
+
     camera.End();
 
     RenderHUD();
-}
-
-void World::RenderDebugPath() {
-    for (size_t i = 0; i + 1 < debugPath.size(); i++) {
-        raylib::Vector2 p1 = map.TileCenter((int)debugPath[i].x,     (int)debugPath[i].y);
-        raylib::Vector2 p2 = map.TileCenter((int)debugPath[i + 1].x, (int)debugPath[i + 1].y);
-        DrawLineEx(p1, p2, 2.0f, Fade(YELLOW, 0.3f));
-    }
-    for (const auto& node : debugPath) {
-        raylib::Vector2 c = map.TileCenter((int)node.x, (int)node.y);
-        DrawCircle((int)c.x, (int)c.y, 3.0f, Fade(RED, 0.4f));
-    }
 }
 
 void World::RenderHUD() {

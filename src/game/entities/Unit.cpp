@@ -3,8 +3,9 @@
 #include <cmath>
 #include <cstdlib>
 
-static constexpr float SPRITE_W    = 51.0f;
-static constexpr float SPRITE_H    = 40.0f;
+static constexpr float SPRITE_W     = 51.0f;
+static constexpr float SPRITE_H     = 40.0f;
+static constexpr float SPRITE_SCALE = 2.0f;
 static constexpr float SEL_OFFS_X  = 25.0f;
 static constexpr float SEL_OFFS_Y  = 25.0f;
 static constexpr float SEL_RADIUS  = 15.0f;
@@ -49,13 +50,13 @@ void Unit::LoadAnimations() {
 
     for (const auto& col : cols) {
         auto idle = std::make_unique<Engine::Animation>();
-        idle->AddFrame({col.x, 0, SPRITE_W, SPRITE_H});
+        idle->AddFrame({col.x * SPRITE_SCALE, 0, SPRITE_W * SPRITE_SCALE, SPRITE_H * SPRITE_SCALE});
         idle->SetLoop(true);
         animController->AddAnimation(std::string("idle_") + col.name, std::move(idle));
 
         auto walk = std::make_unique<Engine::Animation>();
         for (int row = 1; row <= 4; row++)
-            walk->AddFrame({col.x, row * SPRITE_H, SPRITE_W, SPRITE_H});
+            walk->AddFrame({col.x * SPRITE_SCALE, row * SPRITE_H * SPRITE_SCALE, SPRITE_W * SPRITE_SCALE, SPRITE_H * SPRITE_SCALE});
         walk->SetFPS(10);
         walk->SetLoop(true);
         animController->AddAnimation(std::string("walk_") + col.name, std::move(walk));

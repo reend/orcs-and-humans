@@ -33,7 +33,7 @@ void Animation::Update(float dt) {
     timeSinceLastFrame += dt;
     if (timeSinceLastFrame < frameTime) return;
 
-    timeSinceLastFrame = 0.0f;
+    timeSinceLastFrame -= frameTime;
     currentFrame++;
 
     if (currentFrame >= (int)frames.size()) {

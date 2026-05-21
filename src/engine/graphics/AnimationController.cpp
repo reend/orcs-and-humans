@@ -16,7 +16,10 @@ void AnimationController::Play(const std::string& name) {
         LOG_WARN("Animation not found: %s", name.c_str());
         return;
     }
-    if (currentAnimation == it->second.get()) return;
+    if (currentAnimation == it->second.get()) {
+        currentAnimation->Play();
+        return;
+    }
 
     if (currentAnimation) currentAnimation->Stop();
     currentAnimation = it->second.get();

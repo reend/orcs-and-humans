@@ -56,7 +56,7 @@ void Unit::LoadAnimations() {
         auto walk = std::make_unique<Engine::Animation>();
         for (int row = 1; row <= 4; row++)
             walk->AddFrame({col.x, row * SPRITE_H, SPRITE_W, SPRITE_H});
-        walk->SetFPS(16);
+        walk->SetFPS(10);
         walk->SetLoop(true);
         animController->AddAnimation(std::string("walk_") + col.name, std::move(walk));
     }
@@ -137,8 +137,14 @@ void Unit::Draw() {
 
 void Unit::DrawShadow() {
     if (selected) {
-        DrawEllipse((int)(position.x + SEL_OFFS_X), (int)(position.y + SEL_OFFS_Y),
-            SEL_RADIUS, SEL_RADIUS * 0.4f, Fade(GREEN, 0.4f));
+        constexpr float PAD_X = 10.0f;
+        constexpr float PAD_Y = 6.0f;
+        DrawRectangleLinesEx(
+            {position.x + PAD_X, position.y + PAD_Y,
+             SPRITE_W - PAD_X * 2, SPRITE_H - PAD_Y * 2},
+            1.0f,
+            GREEN
+        );
     }
 }
 

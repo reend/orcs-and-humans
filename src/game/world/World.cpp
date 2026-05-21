@@ -15,11 +15,20 @@ World::World()
     : map(128, 128, 32)
     , camera(0.0f, 0.0f) {}
 
+World::~World() {
+    UnloadShader(contrastShader);
+}
+
 void World::Init() {
     map.LoadGround("assets/winter/tileset.png", 19, 1, "assets/winter/ground.csv");
     map.LoadForest("assets/winter/tileset.png", 19, 1, "assets/winter/forest.csv");
 
-    camera.SetZoom(2.2f);
+    contrastShader = LoadShader(0, "assets/shaders/contrast.frag");
+    contrastLoc    = GetShaderLocation(contrastShader, "contrast");
+    float contrast = 1.1f;
+    SetShaderValue(contrastShader, contrastLoc, &contrast, SHADER_UNIFORM_FLOAT);
+
+    camera.SetZoom(2.1f);
     camera.SetBounds(0, 0, 128 * 32, 128 * 32);
     camera.EnableBounds(true);
 
@@ -125,9 +134,11 @@ void World::HandleLeftClick() {
 void World::Render() {
     camera.Begin();
 
+    BeginShaderMode(contrastShader);
     renderer.Begin();
     map.Draw(&camera, &renderer);
     renderer.End();
+    EndShaderMode();
 
     using DrawEntry = std::pair<float, std::function<void()>>;
     std::vector<DrawEntry> drawList;
@@ -144,9 +155,11 @@ void World::Render() {
 
     for (auto& u : units) u->DrawShadow();
 
+    BeginShaderMode(contrastShader);
     renderer.Begin();
     for (auto& [y, draw] : drawList) draw();
     renderer.End();
+    EndShaderMode();
 
     camera.End();
 

@@ -9,11 +9,13 @@
 
 #include "game/entities/Unit.h"
 #include "game/entities/Building.h"
+#include "raylib.h"
 
 
 class World {
 public:
     World();
+    ~World();
 
     void Init();
     void Update(float dt);
@@ -45,4 +47,7 @@ private:
     Engine::CollisionSystem collision;
 
     std::vector<std::unique_ptr<Building>> buildings;
+
+    Shader contrastShader  = {};
+    int    contrastLoc     = -1;
 };

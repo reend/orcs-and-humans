@@ -122,12 +122,28 @@ void World::HandleLeftClick() {
 
     if (Engine::Input::IsMouseButtonReleased(Engine::MouseButton::Left)) {
         isDragging = false;
-
         Rectangle selRect = GetDragRect();
 
-        for (auto& unit : units) {
-            raylib::Vector2 screenPos = camera.WorldToScreen(unit->GetPosition());
-            unit->SetSelected(CheckCollisionPointRec(screenPos, selRect));        }
+        bool isClick = selRect.width < 5 && selRect.height < 5;
+
+        if (isClick) {
+            raylib::Vector2 mouse = Engine::Input::GetMousePosition();
+            for (auto& unit : units) 
+            {
+                raylib::Vector2 screenPos = camera.WorldToScreen(unit->GetPosition());
+                float dx = mouse.x - screenPos.x;
+                float dy = mouse.y - screenPos.y;
+                float dist2 = (dx * dx + dy * dy);
+                bool hit = dist2 < (60*60);
+                unit->SetSelected(hit);
+            }
+    }   else {
+            for (auto& unit : units)
+            {
+                raylib::Vector2 screenPos = camera.WorldToScreen(unit->GetPosition());
+                unit->SetSelected(CheckCollisionPointRec(screenPos, selRect));        
+            }
+        }
     }
 }
 

@@ -29,7 +29,7 @@ void World::Init() {
     SetShaderValue(contrastShader, contrastLoc, &contrast, SHADER_UNIFORM_FLOAT);
 
     camera.SetZoom(2.1f);
-    camera.SetOffset({HUD_W, 0});
+    camera.SetOffset({std::floor(HUD_W), 0});
     camera.SetBounds(0, 0, 128 * 32, 128 * 32);
     camera.EnableBounds(true);
 

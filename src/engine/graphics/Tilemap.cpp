@@ -4,6 +4,8 @@
 #include <fstream>
 #include <sstream>
 
+static constexpr int CULL_MARGIN = 2;
+
 namespace Engine {
 
 Tilemap::Tilemap(int mapWidth, int mapHeight, int tileSize)
@@ -139,10 +141,10 @@ void Tilemap::Draw(Camera2D* camera, SpriteRenderer* renderer) {
     if (!tilesetSprite || !tilesetSprite->IsLoaded()) return;
     
     raylib::Vector2 camPos = camera->GetPosition();
-    int startX = static_cast<int>(camPos.x / tileSize) - 2;
-    int startY = static_cast<int>(camPos.y / tileSize) - 2;
-    int endX = startX + (::GetScreenWidth() / tileSize) + 4;
-    int endY = startY + (::GetScreenHeight() / tileSize) + 4;
+    int startX = static_cast<int>(camPos.x / tileSize) - CULL_MARGIN;
+    int startY = static_cast<int>(camPos.y / tileSize) - CULL_MARGIN;
+    int endX = startX + (::GetScreenWidth()  / tileSize) + CULL_MARGIN * 2;
+    int endY = startY + (::GetScreenHeight() / tileSize) + CULL_MARGIN * 2;
     
     startX = std::clamp(startX, 0, mapWidth);
     startY = std::clamp(startY, 0, mapHeight);

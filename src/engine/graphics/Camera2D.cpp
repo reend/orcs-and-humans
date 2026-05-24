@@ -1,6 +1,9 @@
 #include "Camera2D.h"
 #include <algorithm>
 
+static constexpr float ZOOM_MIN = 0.1f;
+static constexpr float ZOOM_MAX = 5.0f;
+
 namespace Engine {
 
 Camera2D::Camera2D(float x, float y) {
@@ -22,7 +25,7 @@ void Camera2D::Move(raylib::Vector2 offset) {
 }
 
 void Camera2D::SetZoom(float zoom) {
-    camera.zoom = std::clamp(zoom, 0.1f, 5.0f);
+    camera.zoom = std::clamp(zoom, ZOOM_MIN, ZOOM_MAX);
 }
 
 void Camera2D::SetBounds(float minX, float minY, float maxX, float maxY) {

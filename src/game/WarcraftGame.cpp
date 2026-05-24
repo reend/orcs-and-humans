@@ -2,7 +2,7 @@
 #include "game/GameConstants.h"
 
 WarcraftGame::WarcraftGame()
-    : Engine::Game(1920, 1080, "Warcraft Engine", 60) {}
+    : Engine::Game(SCREEN_W, SCREEN_H, "Warcraft Engine", 60) {}
 
 void WarcraftGame::OnInit() {
     world = std::make_unique<World>();
@@ -20,7 +20,7 @@ void WarcraftGame::OnUpdate(float dt) {
 
 void WarcraftGame::OnRender() {
     world->Render();
-    Rectangle src  = { 1, 1, HUD_SRC_W, HUD_SRC_H };
+    Rectangle src  = { HUD_SRC_X, HUD_SRC_Y, HUD_SRC_W, HUD_SRC_H };
     Rectangle dest = { 0, 0, HUD_W, SCREEN_H };
     DrawTexturePro(hudPanel, src, dest, {0, 0}, 0.0f, WHITE);
     DrawTexture(cursors[activeCursor], GetMouseX(), GetMouseY(), WHITE);

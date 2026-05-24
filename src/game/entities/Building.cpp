@@ -1,4 +1,5 @@
 #include "Building.h"
+#include "game/GameConstants.h"
 
 std::unique_ptr<Engine::Sprite> Building::sheet;
 
@@ -15,7 +16,7 @@ Building::Building(raylib::Vector2 tilePos, BuildingType type)
 }
 
 raylib::Vector2 Building::GetPosition() const {
-    return {tilePos.x * 32, tilePos.y * 32};
+    return {tilePos.x * TILE_SIZE, tilePos.y * TILE_SIZE};
 }
 
 int Building::GetTileWidth() const {
@@ -43,8 +44,8 @@ void Building::Draw(Engine::SpriteRenderer* renderer) {
         DrawRectangleLines(
             (int)pos.x,
             (int)pos.y,
-            GetTileWidth() * 32,
-            GetTileHeight() * 32,
+            GetTileWidth()  * TILE_SIZE,
+            GetTileHeight() * TILE_SIZE,
             GREEN);
     }
 }

@@ -15,12 +15,16 @@ struct PathNode {
     int   parentKey = -1;
 };
 
-static inline int Pack(int x, int y) { return x * 10000 + y; }
+static constexpr float SQRT2              = 1.414f;
+static constexpr int   PACK_MULTIPLIER   = 10000;
+static constexpr int   CARDINAL_DIR_COUNT = 4;
+
+static inline int Pack(int x, int y) { return x * PACK_MULTIPLIER + y; }
 
 static float Octile(int x1, int y1, int x2, int y2) {
     float dx = (float)std::abs(x2 - x1);
     float dy = (float)std::abs(y2 - y1);
-    return (dx + dy) + (1.414f - 2.0f) * std::min(dx, dy);
+    return (dx + dy) + (SQRT2 - 2.0f) * std::min(dx, dy);
 }
 
 std::vector<raylib::Vector2> Pathfinder::FindPath(
@@ -68,12 +72,12 @@ std::vector<raylib::Vector2> Pathfinder::FindPath(
         for (int i = 0; i < 8; i++) {
             int nx = cx + dx[i], ny = cy + dy[i];
             if (!isPassable(nx, ny)) continue;
-            if (i >= 4 && (!isPassable(cx, cy + dy[i]) || !isPassable(cx + dx[i], cy))) continue;
+        if (i >= CARDINAL_DIR_COUNT && (!isPassable(cx, cy + dy[i]) || !isPassable(cx + dx[i], cy))) continue;
 
             int nk = Pack(nx, ny);
             if (closed.count(nk)) continue;
 
-            float newG = cg + (i < 4 ? 1.0f : 1.414f);
+            float newG = cg + (i < CARDINAL_DIR_COUNT ? 1.0f : SQRT2);
             auto it = nodes.find(nk);
             if (it == nodes.end() || newG < it->second.g) {
                 PathNode& nb = nodes[nk];

@@ -20,7 +20,9 @@ static const char* DirSuffix(Direction dir) {
     return DIR_SUFFIX[idx];
 }
 
-static constexpr float ARRIVAL_DIST = 30.0f;
+static constexpr float ARRIVAL_DIST   = 30.0f;
+static constexpr int   WALK_ANIM_FPS  = 10;
+static constexpr int   WALK_ANIM_ROWS = 4;
 
 Unit::Unit(raylib::Vector2 position)
     : position(position)
@@ -55,9 +57,9 @@ void Unit::LoadAnimations() {
         animController->AddAnimation(std::string("idle_") + col.name, std::move(idle));
 
         auto walk = std::make_unique<Engine::Animation>();
-        for (int row = 1; row <= 4; row++)
+        for (int row = 1; row <= WALK_ANIM_ROWS; row++)
             walk->AddFrame({col.x * SPRITE_SCALE, row * SPRITE_H * SPRITE_SCALE, SPRITE_W * SPRITE_SCALE, SPRITE_H * SPRITE_SCALE});
-        walk->SetFPS(10);
+        walk->SetFPS(WALK_ANIM_FPS);
         walk->SetLoop(true);
         animController->AddAnimation(std::string("walk_") + col.name, std::move(walk));
     }

@@ -12,7 +12,7 @@ static const raylib::Vector2 OFFSETS[] = {
 };
 
 World::World()
-    : map(128, 128, 32)
+    : map(MAP_WIDTH, MAP_HEIGHT, TILE_SIZE)
     , camera(0.0f, 0.0f) {}
 
 World::~World() {
@@ -20,17 +20,17 @@ World::~World() {
 }
 
 void World::Init() {
-    map.LoadGround("assets/winter/tileset.png", 19, 1, "assets/winter/ground.csv");
-    map.LoadForest("assets/winter/tileset.png", 19, 1, "assets/winter/forest.csv");
+    map.LoadGround("assets/winter/tileset.png", TILESET_TILES_PER_ROW, TILESET_SPACING, "assets/winter/ground.csv");
+    map.LoadForest("assets/winter/tileset.png", TILESET_TILES_PER_ROW, TILESET_SPACING, "assets/winter/forest.csv");
 
     contrastShader = LoadShader(0, "assets/shaders/contrast.frag");
     contrastLoc    = GetShaderLocation(contrastShader, "contrast");
-    float contrast = 1.1f;
+    float contrast = CAM_CONTRAST;
     SetShaderValue(contrastShader, contrastLoc, &contrast, SHADER_UNIFORM_FLOAT);
 
-    camera.SetZoom(2.1f);
+    camera.SetZoom(CAM_ZOOM);
     camera.SetOffset({std::floor(HUD_W), 0});
-    camera.SetBounds(0, 0, 128 * 32, 128 * 32);
+    camera.SetBounds(0, 0, MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE);
     camera.EnableBounds(true);
 
     SpawnUnit(map.TileCenter(5, 5));
@@ -125,7 +125,7 @@ void World::HandleLeftClick() {
         isDragging = false;
         Rectangle selRect = GetDragRect();
 
-        bool isClick = selRect.width < 5 && selRect.height < 5;
+        bool isClick = selRect.width < CLICK_THRESHOLD && selRect.height < CLICK_THRESHOLD;
 
         if (isClick) {
             raylib::Vector2 mouse = Engine::Input::GetMousePosition();
@@ -135,13 +135,13 @@ void World::HandleLeftClick() {
                 float dx = mouse.x - screenPos.x;
                 float dy = mouse.y - screenPos.y;
                 float dist2 = (dx * dx + dy * dy);
-                bool hit = dist2 < (60*60);
+                bool hit = dist2 < (UNIT_CLICK_RADIUS * UNIT_CLICK_RADIUS);
                 unit->SetSelected(hit);
             }
             for (auto& b : buildings) {
                 raylib::Vector2 worldPos = b->GetPosition();
-                float bw = b->GetTileWidth()  * 32.0f;
-                float bh = b->GetTileHeight() * 32.0f;
+                float bw = b->GetTileWidth()  * (float)TILE_SIZE;
+                float bh = b->GetTileHeight() * (float)TILE_SIZE;
                 raylib::Vector2 tl = camera.WorldToScreen(worldPos);
                 Rectangle bRect = { tl.x, tl.y, bw * camera.GetZoom(), bh * camera.GetZoom() };
                 b->SetSelected(CheckCollisionPointRec(mouse, bRect));            }

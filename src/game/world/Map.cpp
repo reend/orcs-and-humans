@@ -4,7 +4,10 @@
 
 Map::Map(int width, int height, int tileSize)
     : ground(width, height, tileSize)
-    , forest(width, height, tileSize) {}
+    , forest(width, height, tileSize) 
+    {
+        blocked.assign(width * height, false);
+    }
 
 void Map::LoadGround(const std::string& tileset, int tilesPerRow, int spacing, const std::string& csv) {
     if (!ground.LoadTileset(tileset, tilesPerRow, spacing) || !ground.LoadFromCSV(csv)) {
@@ -22,7 +25,15 @@ void Map::LoadForest(const std::string& tileset, int tilesPerRow, int spacing, c
 
 bool Map::IsPassable(int x, int y) const {
     if (!IsValid(x, y)) return false;
+    if (blocked[y * ground.GetMapWidth() + x])
+        return false;
     return forest.GetTile(x, y).id == -1;
+}
+
+void Map::SetPassable(int x, int y, bool value) {
+    if (!IsValid(x, y))
+        return;
+    blocked[y * ground.GetMapWidth() + x] = !value;
 }
 
 bool Map::IsValid(int x, int y) const {

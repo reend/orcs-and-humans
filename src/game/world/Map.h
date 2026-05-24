@@ -25,7 +25,10 @@ public:
     int GetHeight()   const { return ground.GetMapHeight(); }
     int GetTileSize() const { return ground.GetTileSize();  }
 
+    void SetPassable(int x, int y, bool value);
+
 private:
     Engine::Tilemap ground;
     Engine::Tilemap forest;
+    std::vector<bool> blocked;
 };

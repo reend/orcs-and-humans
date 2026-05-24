@@ -35,7 +35,7 @@ void World::Init() {
     SpawnUnit(map.TileCenter(5, 5));
     SpawnUnit(map.TileCenter(7, 5));
 
-    buildings.push_back(std::make_unique<Building>(raylib::Vector2{8, 6}, BuildingType::GreatHall));
+    SpawnBuilding({10, 10}, BuildingType::GreatHall);
     LOG_INFO("World initialized");
 }
 
@@ -129,6 +129,16 @@ void World::HandleLeftClick() {
             raylib::Vector2 screenPos = camera.WorldToScreen(unit->GetPosition());
             unit->SetSelected(CheckCollisionPointRec(screenPos, selRect));        }
     }
+}
+
+void World::SpawnBuilding(raylib::Vector2 tilePos, BuildingType type) {
+    auto b = std::make_unique<Building>(tilePos, type);
+    int w = b->GetTileWidth();
+    int h = b->GetTileHeight();
+    for (int dy = 0; dy < h; dy++)
+        for (int dx = 0; dx < w; dx++)
+            map.SetPassable((int)tilePos.x + dx, (int)tilePos.y + dy, false);
+    buildings.push_back(std::move(b));
 }
 
 void World::Render() {

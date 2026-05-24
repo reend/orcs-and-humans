@@ -15,6 +15,8 @@ public:
 
     void Draw(Engine::SpriteRenderer *renderer);
     raylib::Vector2 GetPosition() const;
+    int GetTileWidth() const;
+    int GetTileHeight() const;
 
 private:
     raylib::Vector2   tilePos;

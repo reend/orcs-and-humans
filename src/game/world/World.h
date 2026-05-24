@@ -23,6 +23,8 @@ public:
 
     Unit* SpawnUnit(raylib::Vector2 worldPos);
 
+    void SpawnBuilding(raylib::Vector2 tilePos, BuildingType type);
+
 private:
     void MoveCamera(float dt);
     void HandleRightClick();
@@ -30,7 +32,6 @@ private:
     void RenderDebugPath();
     void RenderHUD();
     void RenderSelectionRect();
-    
 
     Map map;
     Engine::Camera2D camera;

@@ -3,10 +3,10 @@
 #include "engine/input/Input.h"
 #include "engine/pathfinding/Pathfinder.h"
 #include "engine/logging/Logger.h"
+#include "game/GameConstants.h"
 #include "raylib.h"
 #include <algorithm>
 
-static constexpr float CAM_SPEED = 400.0f;
 static const raylib::Vector2 OFFSETS[] = {
     {0,0}, {1,0}, {-1,0}, {0,1}, {0,-1}, {1,1}, {-1,1}, {1,-1}, {-1,-1}
 };
@@ -29,6 +29,7 @@ void World::Init() {
     SetShaderValue(contrastShader, contrastLoc, &contrast, SHADER_UNIFORM_FLOAT);
 
     camera.SetZoom(2.1f);
+    camera.SetOffset({HUD_W, 0});
     camera.SetBounds(0, 0, 128 * 32, 128 * 32);
     camera.EnableBounds(true);
 

@@ -20,4 +20,5 @@ private:
     std::unique_ptr<World> world;
     std::unordered_map<CursorType, Texture2D> cursors;
     CursorType activeCursor = CursorType::Orc;
+    Texture2D hudPanel = {};
 };

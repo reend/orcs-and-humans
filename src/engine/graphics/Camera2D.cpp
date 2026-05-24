@@ -51,4 +51,9 @@ raylib::Vector2 Camera2D::WorldToScreen(raylib::Vector2 worldPos) const {
 void Camera2D::Begin() { ::BeginMode2D(camera); }
 void Camera2D::End()   { ::EndMode2D(); }
 
+void Camera2D::SetOffset(raylib::Vector2 offset) {
+    camera.offset = offset;
 }
+
+}
+

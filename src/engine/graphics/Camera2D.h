@@ -20,6 +20,8 @@ public:
     raylib::Vector2 ScreenToWorld(raylib::Vector2 screenPos) const;
     raylib::Vector2 WorldToScreen(raylib::Vector2 worldPos)  const;
 
+    void SetOffset(raylib::Vector2 offset);
+
     void Begin();
     void End();
 

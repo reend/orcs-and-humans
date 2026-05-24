@@ -137,11 +137,23 @@ void World::HandleLeftClick() {
                 bool hit = dist2 < (60*60);
                 unit->SetSelected(hit);
             }
+            for (auto& b : buildings) {
+                raylib::Vector2 worldPos = b->GetPosition();
+                float bw = b->GetTileWidth()  * 32.0f;
+                float bh = b->GetTileHeight() * 32.0f;
+                raylib::Vector2 tl = camera.WorldToScreen(worldPos);
+                Rectangle bRect = { tl.x, tl.y, bw * camera.GetZoom(), bh * camera.GetZoom() };
+                b->SetSelected(CheckCollisionPointRec(mouse, bRect));            }
     }   else {
             for (auto& unit : units)
             {
                 raylib::Vector2 screenPos = camera.WorldToScreen(unit->GetPosition());
                 unit->SetSelected(CheckCollisionPointRec(screenPos, selRect));        
+            }
+            for (auto& b : buildings)
+            {
+                raylib::Vector2 screenPos = camera.WorldToScreen(b->GetPosition());
+                b->SetSelected(CheckCollisionPointRec(screenPos, selRect));
             }
         }
     }

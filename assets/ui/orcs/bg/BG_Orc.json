@@ -1,0 +1,37 @@
+{"frames": {
+
+"TileableLeft":
+{
+	"frame": {"x":1,"y":2163,"w":855,"h":630},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":855,"h":630},
+	"sourceSize": {"w":855,"h":630}
+},
+"TopLeft":
+{
+	"frame": {"x":1,"y":1,"w":855,"h":2160},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":855,"h":2160},
+	"sourceSize": {"w":855,"h":2160}
+},
+"TopLeftAlt":
+{
+	"frame": {"x":1,"y":1,"w":855,"h":2160},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":855,"h":2160},
+	"sourceSize": {"w":855,"h":2160}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "C:\\Projects\\warcraft2\\War2BNE\\EXE\\Data\\Art\\hd\\HUD\\/BG_Orc.png",
+	"format": "RGBA8888",
+	"size": {"w":857,"h":2794},
+	"scale": "1",
+	"related_multi_packs": [ "BG_Human.json" ],
+	"smartupdate": "$TexturePacker:SmartUpdate:6a2504fe69c3c8726f10c3c4c859a0c7:a58393eb03f50b7f48f68e2a5c25cced:fa8040180309542bdbfbc57a88d50471$"
+}
+}

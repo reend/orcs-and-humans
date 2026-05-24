@@ -38,4 +38,13 @@ int Building::GetTileHeight() const {
 
 void Building::Draw(Engine::SpriteRenderer* renderer) {
     renderer->DrawSprite(sheet->GetTexture(), srcRect, GetPosition());
+    if (selected) {
+        raylib::Vector2 pos = GetPosition();
+        DrawRectangleLines(
+            (int)pos.x,
+            (int)pos.y,
+            GetTileWidth() * 32,
+            GetTileHeight() * 32,
+            GREEN);
+    }
 }

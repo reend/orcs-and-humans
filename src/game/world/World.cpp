@@ -213,3 +213,17 @@ void World::RenderHUD() {
         renderer.GetBatchCount(), renderer.GetDrawCallCount(), (int)debugPath.size());
     DrawText(stats, 20, 50, 18, LIME);
 }
+
+Unit* World::GetFirstSelectedUnit() const {
+    for (auto& u : units)
+        if (u->IsSelected())
+            return u.get();
+    return nullptr;
+}
+
+Building* World::GetFirstSelectedBuilding() const {
+    for (auto& b : buildings)
+        if (b->IsSelected())
+            return b.get();
+    return nullptr;
+}

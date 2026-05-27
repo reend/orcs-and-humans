@@ -155,3 +155,30 @@ void Unit::PushBy(raylib::Vector2 offset) {
     position.x += offset.x;
     position.y += offset.y;
 }
+
+UnitStats Unit::GetStats() const {
+    UnitStats s;
+    s.name          = "Peon";
+    s.level         = 1;
+    s.hp            = hp;
+    s.maxHp         = maxHp;
+    s.armor         = 0;
+    s.dmgMin        = 1;
+    s.dmgMax        = 5;
+    s.range         = 1;
+    s.sight         = 4;
+    s.speed         = 10;
+    s.portraitFrame = {55, 6, 46, 38};
+    return s;
+}
+
+std::vector<ActionButton> Unit::GetActions() const {
+    return {
+        {ActionType::Move,    'M', "Move",    {202, 334, 46, 38}},
+        {ActionType::Stop,    'S', "Stop",    {349, 662, 46, 38}},
+        {ActionType::Attack,  'A', "Attack",  {447, 457, 46, 38}},
+        {ActionType::Repair,  'R', "Repair",  {251, 334, 46, 38}},
+        {ActionType::Harvest, 'H', "Harvest", {300, 334, 46, 38}},
+        {ActionType::Build,   'B', "Build",   {349, 334, 46, 38}},
+    };
+}

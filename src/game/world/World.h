@@ -25,6 +25,9 @@ public:
 
     void SpawnBuilding(raylib::Vector2 tilePos, BuildingType type);
 
+    Unit *GetFirstSelectedUnit()         const;
+    Building *GetFirstSelectedBuilding() const;
+
 private:
     void MoveCamera(float dt);
     void HandleRightClick();

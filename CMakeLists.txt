@@ -41,6 +41,7 @@ add_executable(${PROJECT_NAME}
     src/game/entities/Unit.cpp
     src/engine/physics/CollisionSystem.cpp
     src/game/entities/Building.cpp
+    src/game/hud/HUD.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

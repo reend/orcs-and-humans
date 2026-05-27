@@ -4,6 +4,21 @@
 #include "raylib-cpp.hpp"
 #include <vector>
 #include <memory>
+#include "game/GameTypes.h"
+
+struct UnitStats {
+    const char* name   = "Unit";
+    int   level        = 1;
+    int   hp           = 0;
+    int   maxHp        = 0;
+    int   armor        = 0;
+    int   dmgMin       = 1;
+    int   dmgMax       = 5;
+    int   range        = 1;
+    int   sight        = 4;
+    int   speed        = 10;
+    Rectangle   portraitFrame = {};
+};
 
 enum class Direction {
     Up, UpRight, Right, DownRight, Down, DownLeft, Left, UpLeft
@@ -25,7 +40,12 @@ public:
     void PushBy(raylib::Vector2 offset);
     void DrawShadow();
 
+    UnitStats GetStats() const;
+    std::vector<ActionButton> GetActions() const;
+
 private:
+    int hp    = 30;
+    int maxHp = 30;
     void LoadAnimations();
     void UpdateMovement(float dt);
     Direction GetDirectionToTarget(raylib::Vector2 target) const;

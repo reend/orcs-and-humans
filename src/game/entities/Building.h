@@ -1,8 +1,20 @@
 #pragma once
 #include "engine/graphics/Sprite.h"
 #include "engine/graphics/SpriteRenderer.h"
+#include "game/GameTypes.h"
 #include "raylib-cpp.hpp"
 #include <memory>
+#include <vector> 
+
+struct BuildingStats {
+    const char* name        = "Building";
+    int         hp          = 0;
+    int         maxHp       = 0;
+    int         goldCost    = 0;
+    int         lumberCost  = 0;
+    int         oilCost     = 0;
+    Rectangle   portraitFrame = {};
+};
 
 enum class BuildingType
 {
@@ -22,7 +34,12 @@ public:
     bool IsSelected() const { return selected; }
     void SetSelected(bool value) { selected = value; }
 
+    std::vector<ActionButton> GetActions() const;
+    BuildingStats GetStats() const;
+
 private:
+    int hp    = 1200;
+    int maxHp = 1200;
     raylib::Vector2   tilePos;
     BuildingType      type;
     raylib::Rectangle srcRect;

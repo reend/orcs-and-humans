@@ -10,7 +10,7 @@ void WarcraftGame::OnInit() {
     cursors[CursorType::Orc]   = LoadTexture("assets/ui/cursors/orc.png");
     cursors[CursorType::Human] = LoadTexture("assets/ui/cursors/human.png");
     HideCursor();
-    hudPanel = LoadTexture("assets/ui/orcs/bg/BG_Orc.png");
+    hud.Init();
     ToggleFullscreen();
 }
 
@@ -20,14 +20,12 @@ void WarcraftGame::OnUpdate(float dt) {
 
 void WarcraftGame::OnRender() {
     world->Render();
-    Rectangle src  = { HUD_SRC_X, HUD_SRC_Y, HUD_SRC_W, HUD_SRC_H };
-    Rectangle dest = { 0, 0, HUD_W, SCREEN_H };
-    DrawTexturePro(hudPanel, src, dest, {0, 0}, 0.0f, WHITE);
+    hud.Render(world->GetFirstSelectedUnit(), world->GetFirstSelectedBuilding());
     DrawTexture(cursors[activeCursor], GetMouseX(), GetMouseY(), WHITE);
 }
 
 void WarcraftGame::OnShutdown() {
-    UnloadTexture(hudPanel);
+    hud.Shutdown();
     for (auto& [type, tex] : cursors)
         UnloadTexture(tex);
     ShowCursor();

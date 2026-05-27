@@ -49,3 +49,30 @@ void Building::Draw(Engine::SpriteRenderer* renderer) {
             GREEN);
     }
 }
+
+std::vector<ActionButton> Building::GetActions() const {
+    switch (type) {
+        case BuildingType::GreatHall:
+            return {
+                {ActionType::Train, 'P', "Train Peon", {55, 6, 46, 38}},
+            };
+        default:
+            return {};
+    }
+}
+
+BuildingStats Building::GetStats() const {
+    BuildingStats s;
+    s.hp    = hp;
+    s.maxHp = maxHp;
+    switch (type) {
+        case BuildingType::GreatHall:
+            s.name         = "Great Hall";
+            s.goldCost     = 1200;
+            s.lumberCost   = 0;
+            s.oilCost      = 0;
+            s.portraitFrame = {55, 170, 46, 38};
+            break;
+    }
+    return s;
+}

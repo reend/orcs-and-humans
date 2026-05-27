@@ -3,6 +3,7 @@
 #include "game/world/World.h"
 #include <memory>
 #include <unordered_map>
+#include "game/hud/HUD.h"
 
 enum class CursorType { Orc, Human };
 
@@ -20,5 +21,5 @@ private:
     std::unique_ptr<World> world;
     std::unordered_map<CursorType, Texture2D> cursors;
     CursorType activeCursor = CursorType::Orc;
-    Texture2D hudPanel = {};
+    HUD hud;
 };
